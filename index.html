@@ -75,23 +75,23 @@
       // Modify or remove this function to customize the visually presented
       // way that non-critical warnings and error messages are presented to the
       // user.
-      function unityShowBanner(msg, type) {
-        function updateBannerVisibility() {
-          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
-        }
-        var div = document.createElement('div');
-        div.innerHTML = msg;
-        warningBanner.appendChild(div);
-        if (type == 'error') div.style = 'background: red; padding: 10px;';
-        else {
-          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
-          setTimeout(function() {
-            warningBanner.removeChild(div);
-            updateBannerVisibility();
-          }, 5000);
-        }
-        updateBannerVisibility();
-      }
+      // function unityShowBanner(msg, type) {
+      //   function updateBannerVisibility() {
+      //     warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+      //   }
+      //   var div = document.createElement('div');
+      //   div.innerHTML = msg;
+      //   warningBanner.appendChild(div);
+      //   if (type == 'error') div.style = 'background: red; padding: 10px;';
+      //   else {
+      //     if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+      //     setTimeout(function() {
+      //       warningBanner.removeChild(div);
+      //       updateBannerVisibility();
+      //     }, 5000);
+      //   }
+      //   updateBannerVisibility();
+      // }
 	 
       var buildUrl = "Build";
       var loaderUrl = buildUrl + "/BlockBlast1.1-8.loader.js";
@@ -103,7 +103,7 @@
         companyName: "reun",
         productName: "Block Blast Puzzle",
         productVersion: "1.1",
-        showBanner: unityShowBanner,
+        // showBanner: unityShowBanner,
       };
 
       // By default Unity keeps WebGL canvas render target size matched with
