@@ -1,1 +1,47 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mini Chrome Extensions</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+  <header class="bg-white shadow p-4">
+    <div class="container mx-auto flex justify-between items-center">
+      <h1 class="text-2xl font-bold">🧩 Mini Chrome Extensions</h1>
+      <nav>
+        <a href="#extensions" class="text-blue-600 hover:underline mx-2">Extensions</a>
+        <a href="#updates" class="text-blue-600 hover:underline mx-2">Updates</a>
+        <a href="#contact" class="text-blue-600 hover:underline mx-2">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container mx-auto px-4 py-8">
+    <!-- Шинэчлэлтүүд -->
+    <section id="updates" class="mb-12">
+      <h2 class="text-xl font-semibold mb-4">🆕 Шинэ зүйлс нэмэгдлээ</h2>
+      <ul id="update-list" class="space-y-2">
+        <!-- JS-аар динамик нэмэгдэнэ -->
+      </ul>
+    </section>
+
+    <!-- Extension жагсаалт -->
+    <section id="extensions" class="mb-12">
+      <h2 class="text-xl font-semibold mb-4">📦 Миний Chrome Extension болон Theme-үүд</h2>
+      <div id="extension-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- JS-аар картыг динамик нэмнэ -->
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="contact" class="bg-white border-t p-4 mt-12 text-center text-sm text-gray-500">
+    <p>© 2025 Batjargal. Холбоо барих: <a href="mailto:sanji9608@gmail.com" class="text-blue-600 hover:underline">sanji9608@gmail.com</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
 
