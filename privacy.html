@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Privacy Policy — Facebook Picture Guard</title>
+  <meta name="description" content="Privacy Policy for the Facebook Picture Guard Chrome Extension." />
+  <style>
+    :root {
+      --bg: #0b1020;
+      --card: #121a32;
+      --text: #e9eefb;
+      --muted: #a9b2c7;
+      --accent: #5aa9ff;
+      --border: #27314f;
+      --shadow: 0 10px 25px rgba(0,0,0,.35);
+    }
+    @media (prefers-color-scheme: light) {
+      :root { --bg:#f6f8ff; --card:#ffffff; --text:#101522; --muted:#4b556b; --accent:#0b62ff; --border:#e7ecfb; }
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: radial-gradient(1200px 700px at 20% -10%, rgba(90,169,255,.15), transparent 60%),
+                  radial-gradient(900px 600px at 110% 10%, rgba(162,109,255,.12), transparent 60%),
+                  var(--bg);
+      color: var(--text);
+      font: 16px/1.6 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Noto Sans, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+    .wrap { max-width: 860px; margin: 48px auto; padding: 0 20px; }
+    header {
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,0));
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 32px 28px;
+    }
+    .title { display:flex; align-items:center; gap:14px; }
+    .badge { color:#0b62ff; background:rgba(90,169,255,.15); border:1px solid var(--border); padding:6px 10px; border-radius:999px; font-weight:600; font-size:12px; }
+    h1 { margin: 8px 0 6px; font-size: clamp(26px, 4vw, 36px); line-height: 1.2; }
+    .meta { color: var(--muted); font-size: 14px; }
+    .card {
+      margin-top: 22px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px 22px;
+      box-shadow: var(--shadow);
+    }
+    h2 { font-size: clamp(20px, 3vw, 24px); margin: 24px 0 10px; }
+    p { margin: 10px 0; }
+    ul { margin: 8px 0 16px 20px; }
+    li + li { margin-top: 6px; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .toc { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 10px; padding: 0; list-style: none; }
+    .toc a { display:block; padding:10px 12px; border:1px solid var(--border); border-radius:12px; background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,0)); }
+    .notice { background: rgba(11,98,255,.08); border-left: 4px solid var(--accent); padding: 12px 14px; border-radius:12px; }
+    footer { color: var(--muted); text-align: center; font-size: 13px; margin: 28px 0 60px; }
+    code { background: rgba(255,255,255,.06); padding: 2px 6px; border-radius: 6px; border: 1px solid var(--border); }
+
+    /* Print */
+    @media print {
+      body { background: #fff; }
+      header, .card { box-shadow: none; }
+      a { color: #000; text-decoration: underline; }
+      .toc { grid-template-columns: 1fr 1fr; }
+      .badge { border: none; background: #e6f0ff; color: #003ea8; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="title">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 3l7 4v5c0 5-3.5 8-7 9-3.5-1-7-4-7-9V7l7-4z" stroke="currentColor" stroke-width="1.5" fill="none"/>
+          <path d="M9.5 12.5l1.75 1.75 3.75-3.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span class="badge">Facebook Picture Guard</span>
+      </div>
+      <h1>Privacy Policy</h1>
+      <p class="meta">
+        Effective Date: <strong>2026‑08‑27</strong> · Last Updated: <strong>2025‑08‑27]</strong>
+      </p>
+      <p class="notice">This Privacy Policy explains how <strong>Batka</strong> "we" collects, uses, stores, and shares information when you use the <em>Facebook Picture Guard</em> Chrome Extension ("Extension").</p>
+    </header>
+
+    <section class="card">
+      <h2 id="overview">1. Overview</h2>
+      <p>We are committed to protecting your privacy. This policy covers the Extension only and does not apply to Facebook or any third‑party websites and services.</p>
+    </section>
+
+    <section class="card">
+      <h2>Table of Contents</h2>
+      <ul class="toc">
+        <li><a href="#collection">2. Information We Collect</a></li>
+        <li><a href="#use">3. How We Use Information</a></li>
+        <li><a href="#storage">4. Data Storage & Security</a></li>
+        <li><a href="#sharing">5. Data Sharing & Disclosure</a></li>
+        <li><a href="#rights">6. Your Rights & Choices</a></li>
+        <li><a href="#children">7. Children’s Privacy</a></li>
+        <li><a href="#changes">8. Changes to This Policy</a></li>
+        <li><a href="#contact">9. Contact Us</a></li>
+      </ul>
+    </section>
+
+    <section class="card" id="collection">
+      <h2>2. Information We Collect</h2>
+      <p><strong>Non‑Personal Information</strong> (optional): technical diagnostics such as extension version, runtime errors, and generic usage metrics.
+      </p>
+      <p><strong>Local Storage Data</strong>: preferences and settings saved using the Chrome Storage API to operate core features on <code>facebook.com</code>.</p>
+      <p><em>We do not collect personal identifiers (e.g., name, email) and we never access your Facebook credentials or the contents of your private messages.</em></p>
+    </section>
+
+    <section class="card" id="use">
+      <h2>3. How We Use Information</h2>
+      <ul>
+        <li>To provide and maintain core functionality of the Extension on Facebook pages.</li>
+        <li>To remember your preferences locally for a better user experience.</li>
+        <li>To diagnose and improve performance and reliability.</li>
+      </ul>
+      <p>We do <strong>not</strong> sell or rent any information to third parties.</p>
+    </section>
+
+    <section class="card" id="storage">
+      <h2>4. Data Storage & Security</h2>
+      <ul>
+        <li>Data is stored <strong>locally in your browser</strong> via Chrome Storage API; no cloud transfer is performed by default.</li>
+        <li>Retention: local data persists until you clear it or uninstall the Extension.</li>
+        <li>Security: reasonable technical and organizational measures are applied; however, no method is 100% secure.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="sharing">
+      <h2>5. Data Sharing & Disclosure</h2>
+      <ul>
+        <li>We do not share personal data with third parties.</li>
+        <li>If third‑party services (e.g., crash reporting) are integrated in the future, we will update this policy and provide notice as appropriate.</li>
+        <li>Legal: we may disclose information if required by applicable law, regulation, or legal process.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="rights">
+      <h2>6. Your Rights & Choices</h2>
+      <ul>
+        <li>Uninstall or disable the Extension at any time from your browser’s Extensions page.</li>
+        <li>Clear data saved by the Extension via your browser settings.</li>
+        <li>Contact us to request additional information about data handling.</li>
+      </ul>
+    </section>
+
+    <section class="card" id="children">
+      <h2>7. Children’s Privacy</h2>
+      <p>The Extension is <strong>not directed</strong> to children under 13 (or under 16 where applicable). We do not knowingly collect personal information from children.</p>
+    </section>
+
+    <section class="card" id="changes">
+      <h2>8. Changes to This Policy</h2>
+      <p>We may update this Privacy Policy from time to time. If material changes occur, we will provide notice via the Chrome Web Store listing and/or in‑extension notices. The “Last Updated” date at the top reflects the latest revision.</p>
+    </section>
+
+    <section class="card" id="contact">
+      <h2>9. Contact Us</h2>
+      <p>For questions or concerns about this policy, contact:</p>
+      <ul>
+        <li>Email: <a href="mailto:batk32474@gmail.com">batk32474@gmail.com</a></li>
+<!--         <li>Website: <a href="https://[your-website.example]" target="_blank" rel="noopener">[your-website.example]</a></li> -->
+<!--         <li>Developer/Company: <strong>[Your Name or Company]</strong></li> -->
+      </ul>
+    </section>
+
+    <footer>
+      <p>© <span id="y"></span> Facebook profile guard. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script>
+    // dynamic year for footer
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
