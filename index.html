@@ -1,78 +1,258 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <title>Hand Drawing</title>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
   <style>
-    body { margin: 0; background: #050301; overflow: hidden; }
-    video { display: none; }
-    canvas { width: 100%; height: 100%; transform: scaleX(-1); position: absolute; z-index: 1; }
+    body {
+      margin: 0;
+      background: #050301;
+      overflow: hidden;
+    }
+
+    video {
+      display: none;
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      transform: scaleX(-1);
+      position: absolute;
+      z-index: 1;
+    }
+
     #colorBar {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-      z-index: 10; display: flex; gap: 10px; align-items: center;
-      background: rgba(36, 36, 36, 0.51); padding: 10px 16px; border-radius: 999px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      background: rgba(36, 36, 36, 0.51);
+      padding: 10px 16px;
+      border-radius: 999px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
     }
-    #colorBar label { color: #F5D061; font-family: sans-serif; font-size: 13px; }
+
+    #colorBar label {
+      color: #F5D061;
+      font-family: sans-serif;
+      font-size: 13px;
+    }
+
     .colorBtn {
-      width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent;
-      cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
     }
-    .colorBtn:hover { transform: scale(1.15); box-shadow: 0 0 12px currentColor; }
-    .colorBtn.active { border-color: #fff; box-shadow: 0 0 0 2px rgba(245,208,97,0.6); }
-    .customColorWrap { position: relative; width: 38px; height: 38px; flex-shrink: 0; }
-    .customColorWrap:hover { transform: scale(1.15); }
+
+    .colorBtn:hover {
+      transform: scale(1.15);
+      box-shadow: 0 0 12px currentColor;
+    }
+
+    .colorBtn.active {
+      border-color: #fff;
+      box-shadow: 0 0 0 2px rgba(245, 208, 97, 0.6);
+    }
+
+    .customColorWrap {
+      position: relative;
+      width: 38px;
+      height: 38px;
+      flex-shrink: 0;
+    }
+
+    .customColorWrap:hover {
+      transform: scale(1.15);
+    }
+
     #customColor {
-      position: absolute; inset: 0; width: 100%; height: 100%;
-      border-radius: 50%; border: 2px solid transparent;
-      cursor: pointer; background: transparent;
-      padding: 0; -webkit-appearance: none; appearance: none;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      cursor: pointer;
+      background: transparent;
+      padding: 0;
+      -webkit-appearance: none;
+      appearance: none;
     }
-    #customColor::-webkit-color-swatch-wrapper { padding: 2px; }
-    #customColor::-webkit-color-swatch { border: none; border-radius: 50%; }
-    #customColor::-moz-color-swatch { border: none; border-radius: 50%; }
-    .customColorWrap.active #customColor { border-color: #fff; box-shadow: 0 0 0 2px rgba(245,208,97,0.6); }
+
+    #customColor::-webkit-color-swatch-wrapper {
+      padding: 2px;
+    }
+
+    #customColor::-webkit-color-swatch {
+      border: none;
+      border-radius: 50%;
+    }
+
+    #customColor::-moz-color-swatch {
+      border: none;
+      border-radius: 50%;
+    }
+
+    .customColorWrap.active #customColor {
+      border-color: #fff;
+      box-shadow: 0 0 0 2px rgba(245, 208, 97, 0.6);
+    }
+
     #downloadBtn {
-      padding: 8px 14px; border-radius: 999px; border: 2px solid rgba(245, 208, 97, 0.5);
-      background: rgba(36, 36, 36, 0.8); color: #F5D061; font-size: 13px; font-family: sans-serif;
-      cursor: pointer; transition: background 0.2s, box-shadow 0.2s; white-space: nowrap;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 2px solid rgba(245, 208, 97, 0.5);
+      background: rgba(36, 36, 36, 0.8);
+      color: #F5D061;
+      font-size: 13px;
+      font-family: sans-serif;
+      cursor: pointer;
+      transition: background 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
     }
-    #downloadBtn:hover { background: rgba(245, 208, 97, 0.2); box-shadow: 0 0 12px rgba(245, 208, 97, 0.3); }
+
+    #downloadBtn:hover {
+      background: rgba(245, 208, 97, 0.2);
+      box-shadow: 0 0 12px rgba(245, 208, 97, 0.3);
+    }
+
     #helpBtn {
-      position: fixed; top: 16px; right: 16px; z-index: 10;
-      width: 40px; height: 40px; border-radius: 50%;
-      background: rgba(36, 36, 36, 0.8); color: #F5D061;
-      border: 2px solid rgba(245, 208, 97, 0.5); cursor: pointer;
-      font-size: 18px; font-weight: bold;
-      display: flex; align-items: center; justify-content: center;
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 10;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(36, 36, 36, 0.8);
+      color: #F5D061;
+      border: 2px solid rgba(245, 208, 97, 0.5);
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       transition: background 0.2s, box-shadow 0.2s;
     }
-    #helpBtn:hover { background: rgba(245, 208, 97, 0.2); box-shadow: 0 0 16px rgba(245, 208, 97, 0.4); }
-    #helpOverlay {
-      position: fixed; inset: 0; z-index: 20; background: rgba(0,0,0,0.7);
-      display: none; align-items: center; justify-content: center;
-      padding: 20px; box-sizing: border-box;
+
+    #helpBtn:hover {
+      background: rgba(245, 208, 97, 0.2);
+      box-shadow: 0 0 16px rgba(245, 208, 97, 0.4);
     }
-    #helpOverlay.show { display: flex; }
+
+    #helpOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    #helpOverlay.show {
+      display: flex;
+    }
+
     #helpBox {
       background: linear-gradient(180deg, #1a1510 0%, #0d0a06 100%);
       border: 1px solid rgba(245, 208, 97, 0.35);
-      border-radius: 16px; padding: 28px 32px; max-width: 380px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,208,97,0.1);
+      border-radius: 16px;
+      padding: 28px 32px;
+      max-width: 380px;
+      box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(245, 208, 97, 0.1);
     }
-    #helpBox h2 { margin: 0 0 18px 0; color: #F5D061; font-size: 1.35rem; font-family: sans-serif; }
-    #helpBox ul { margin: 0; padding-left: 20px; color: rgba(255,255,255,0.9); line-height: 1.85; font-family: sans-serif; font-size: 15px; }
-    #helpBox li { margin-bottom: 8px; }
-    #helpBox .close { margin-top: 20px; padding: 10px 24px; background: rgba(245,208,97,0.2);
-      color: #F5D061; border: 1px solid rgba(245,208,97,0.5); border-radius: 8px;
-      cursor: pointer; font-size: 14px; width: 100%;
+
+    #helpBox h2 {
+      margin: 0 0 18px 0;
+      color: #F5D061;
+      font-size: 1.35rem;
+      font-family: sans-serif;
     }
-    #helpBox .close:hover { background: rgba(245,208,97,0.3); }
+
+    #helpBox ul {
+      margin: 0;
+      padding-left: 20px;
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.85;
+      font-family: sans-serif;
+      font-size: 15px;
+    }
+
+    #helpBox li {
+      margin-bottom: 8px;
+    }
+
+    #helpBox .close {
+      margin-top: 20px;
+      padding: 10px 24px;
+      background: rgba(245, 208, 97, 0.2);
+      color: #F5D061;
+      border: 1px solid rgba(245, 208, 97, 0.5);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      width: 100%;
+    }
+
+    #helpBox .close:hover {
+      background: rgba(245, 208, 97, 0.3);
+    }
+
+    #mobileNotice {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: #0d0a06;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    #mobileNotice.show {
+      display: flex;
+    }
+
+    #mobileNotice .message {
+      text-align: center;
+      color: #F5D061;
+      font-family: sans-serif;
+      font-size: 1.25rem;
+      line-height: 1.6;
+      max-width: 320px;
+    }
+
+    #mobileNotice .message strong {
+      display: block;
+      margin-bottom: 12px;
+      font-size: 1.1em;
+    }
   </style>
 </head>
+
 <body>
+  <div id="mobileNotice">
+    <div class="message">
+      <strong>Website is not available from mobile phones.</strong>
+      Please use a desktop computer to access the website.
+    </div>
+  </div>
   <video id="vid"></video>
   <canvas id="c"></canvas>
   <button type="button" id="helpBtn" title="Help">?</button>
@@ -120,26 +300,26 @@
     var customColorWrap = document.querySelector('.customColorWrap');
     var customColorInput = document.getElementById('customColor');
 
-    document.querySelectorAll('.colorBtn').forEach(function(btn) {
+    document.querySelectorAll('.colorBtn').forEach(function (btn) {
       btn.style.background = btn.getAttribute('data-color');
-      btn.addEventListener('click', function() {
-        document.querySelectorAll('.colorBtn').forEach(function(b) { b.classList.remove('active'); });
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.colorBtn').forEach(function (b) { b.classList.remove('active'); });
         customColorWrap.classList.remove('active');
         this.classList.add('active');
         currentColor = this.getAttribute('data-color');
       });
     });
 
-    customColorInput.addEventListener('input', function() {
-      document.querySelectorAll('.colorBtn').forEach(function(b) { b.classList.remove('active'); });
+    customColorInput.addEventListener('input', function () {
+      document.querySelectorAll('.colorBtn').forEach(function (b) { b.classList.remove('active'); });
       customColorWrap.classList.add('active');
       currentColor = this.value;
     });
-    customColorInput.addEventListener('change', function() {
+    customColorInput.addEventListener('change', function () {
       currentColor = this.value;
     });
 
-    document.getElementById('downloadBtn').addEventListener('click', function() {
+    document.getElementById('downloadBtn').addEventListener('click', function () {
       var w = c.width, h = c.height;
       var out = document.createElement('canvas');
       out.width = w;
@@ -175,17 +355,17 @@
 
     var helpOverlay = document.getElementById('helpOverlay');
     var helpBox = document.getElementById('helpBox');
-    document.getElementById('helpBtn').addEventListener('click', function() {
+    document.getElementById('helpBtn').addEventListener('click', function () {
       helpOverlay.classList.add('show');
     });
-    document.querySelector('#helpBox .close').addEventListener('click', function() {
+    document.querySelector('#helpBox .close').addEventListener('click', function () {
       helpOverlay.classList.remove('show');
     });
-    helpOverlay.addEventListener('click', function(e) {
+    helpOverlay.addEventListener('click', function (e) {
       if (e.target === helpOverlay) helpOverlay.classList.remove('show');
     });
 
-    window.onkeydown = function(e) {
+    window.onkeydown = function (e) {
       if (e.key === 'Control') ctrlDraw = true;
       if (e.code == 'Space') {
         arr = [];
@@ -206,8 +386,8 @@
         if (redoStack.length > 0) arr.push(redoStack.pop());
       }
     }
-    
-    window.onkeyup = function(e) {
+
+    window.onkeyup = function (e) {
       if (e.key === 'Control') ctrlDraw = false;
     }
 
@@ -237,15 +417,15 @@
 
       if (res.multiHandLandmarks && res.multiHandLandmarks.length > 0) {
         var lm = res.multiHandLandmarks[0];
-        drawConnectors(ctx, lm, HAND_CONNECTIONS, {color: 'rgba(245, 208, 97, 0.3)', lineWidth: 2});
-        drawLandmarks(ctx, lm, {color: '#FFFFFF', lineWidth: 1, radius: 2});
+        drawConnectors(ctx, lm, HAND_CONNECTIONS, { color: 'rgba(245, 208, 97, 0.3)', lineWidth: 2 });
+        drawLandmarks(ctx, lm, { color: '#FFFFFF', lineWidth: 1, radius: 2 });
 
         var ind = lm[8];
         var rx = ind.x * c.width;
         var ry = ind.y * c.height;
 
         if (sx == null) {
-          sx = rx; 
+          sx = rx;
           sy = ry;
         } else {
           sx += (rx - sx) * 0.45;
@@ -254,10 +434,10 @@
 
         ctx.beginPath();
         ctx.arc(sx, sy, 6, 0, 2 * Math.PI);
-        if (ctrlDraw) { 
-          ctx.fillStyle = '#FFFFFF'; 
-        } else { 
-          ctx.fillStyle = 'rgba(245, 208, 97, 0.4)'; 
+        if (ctrlDraw) {
+          ctx.fillStyle = '#FFFFFF';
+        } else {
+          ctx.fillStyle = 'rgba(245, 208, 97, 0.4)';
         }
         ctx.fill();
 
@@ -268,7 +448,7 @@
             arr.push({ pts: [], color: currentColor });
             cur = arr[arr.length - 1].pts;
           }
-          cur.push({x: sx, y: sy});
+          cur.push({ x: sx, y: sy });
         } else {
           draw = false;
         }
@@ -283,14 +463,14 @@
         return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
       }
     });
-    
-    h.setOptions({ 
-      maxNumHands: 1, 
-      modelComplexity: 1, 
-      minDetectionConfidence: 0.5, 
-      minTrackingConfidence: 0.5 
+
+    h.setOptions({
+      maxNumHands: 1,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
     });
-    
+
     h.onResults(run);
 
     function showError(msg) {
@@ -298,14 +478,20 @@
         '<strong>Camera error</strong><br><br>' + msg.replace(/<code>/g, '<code style="background:#1a1510;padding:2px 6px;border-radius:4px;font-family:monospace;">') + '</div>';
     }
 
+    function isMobile() {
+      return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+    }
+
     if (window.location.protocol === 'file:') {
       showError('Camera does not work when opening the file directly. Run a local server instead, e.g. from this folder: <code>npx serve .</code> or <code>python -m http.server 8000</code> then open http://localhost:8000');
+    } else if (isMobile()) {
+      document.getElementById('mobileNotice').classList.add('show');
     } else if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
       showError('Camera API not available. Use HTTPS or localhost.');
     } else {
       // Let the browser choose the best resolution for this device
       var cam = new Camera(vid, {
-        onFrame: async () => { await h.send({image: vid}); },
+        onFrame: async () => { await h.send({ image: vid }); },
         facingMode: 'user'
       });
       cam.start().catch(function (err) {
@@ -320,4 +506,5 @@
     }
   </script>
 </body>
+
 </html>
