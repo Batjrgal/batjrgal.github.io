@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Hand Drawing</title>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+  <style>
+    body { margin: 0; background: #050301; overflow: hidden; }
+    video { display: none; }
+    canvas { width: 100%; height: 100%; transform: scaleX(-1); position: absolute; z-index: 1; }
+    #colorBar {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      z-index: 10; display: flex; gap: 10px; align-items: center;
+      background: rgba(36, 36, 36, 0.51); padding: 10px 16px; border-radius: 999px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+    #colorBar label { color: #F5D061; font-family: sans-serif; font-size: 13px; }
+    .colorBtn {
+      width: 32px; height: 32px; border-radius: 50%; border: 2px solid transparent;
+      cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .colorBtn:hover { transform: scale(1.15); box-shadow: 0 0 12px currentColor; }
+    .colorBtn.active { border-color: #fff; box-shadow: 0 0 0 2px rgba(245,208,97,0.6); }
+    .customColorWrap { position: relative; width: 38px; height: 38px; flex-shrink: 0; }
+    .customColorWrap:hover { transform: scale(1.15); }
+    #customColor {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      border-radius: 50%; border: 2px solid transparent;
+      cursor: pointer; background: transparent;
+      padding: 0; -webkit-appearance: none; appearance: none;
+    }
+    #customColor::-webkit-color-swatch-wrapper { padding: 2px; }
+    #customColor::-webkit-color-swatch { border: none; border-radius: 50%; }
+    #customColor::-moz-color-swatch { border: none; border-radius: 50%; }
+    .customColorWrap.active #customColor { border-color: #fff; box-shadow: 0 0 0 2px rgba(245,208,97,0.6); }
+    #downloadBtn {
+      padding: 8px 14px; border-radius: 999px; border: 2px solid rgba(245, 208, 97, 0.5);
+      background: rgba(36, 36, 36, 0.8); color: #F5D061; font-size: 13px; font-family: sans-serif;
+      cursor: pointer; transition: background 0.2s, box-shadow 0.2s; white-space: nowrap;
+    }
+    #downloadBtn:hover { background: rgba(245, 208, 97, 0.2); box-shadow: 0 0 12px rgba(245, 208, 97, 0.3); }
+    #helpBtn {
+      position: fixed; top: 16px; right: 16px; z-index: 10;
+      width: 40px; height: 40px; border-radius: 50%;
+      background: rgba(36, 36, 36, 0.8); color: #F5D061;
+      border: 2px solid rgba(245, 208, 97, 0.5); cursor: pointer;
+      font-size: 18px; font-weight: bold;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    #helpBtn:hover { background: rgba(245, 208, 97, 0.2); box-shadow: 0 0 16px rgba(245, 208, 97, 0.4); }
+    #helpOverlay {
+      position: fixed; inset: 0; z-index: 20; background: rgba(0,0,0,0.7);
+      display: none; align-items: center; justify-content: center;
+      padding: 20px; box-sizing: border-box;
+    }
+    #helpOverlay.show { display: flex; }
+    #helpBox {
+      background: linear-gradient(180deg, #1a1510 0%, #0d0a06 100%);
+      border: 1px solid rgba(245, 208, 97, 0.35);
+      border-radius: 16px; padding: 28px 32px; max-width: 380px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.5), 0 0 0 1px rgba(245,208,97,0.1);
+    }
+    #helpBox h2 { margin: 0 0 18px 0; color: #F5D061; font-size: 1.35rem; font-family: sans-serif; }
+    #helpBox ul { margin: 0; padding-left: 20px; color: rgba(255,255,255,0.9); line-height: 1.85; font-family: sans-serif; font-size: 15px; }
+    #helpBox li { margin-bottom: 8px; }
+    #helpBox .close { margin-top: 20px; padding: 10px 24px; background: rgba(245,208,97,0.2);
+      color: #F5D061; border: 1px solid rgba(245,208,97,0.5); border-radius: 8px;
+      cursor: pointer; font-size: 14px; width: 100%;
+    }
+    #helpBox .close:hover { background: rgba(245,208,97,0.3); }
+  </style>
+</head>
+<body>
+  <video id="vid"></video>
+  <canvas id="c"></canvas>
+  <button type="button" id="helpBtn" title="Help">?</button>
+  <div id="helpOverlay">
+    <div id="helpBox">
+      <h2>Help</h2>
+      <ul>
+        <!-- <li>Камерыг гартаа зургаа харуулна. Нэг гар харагдах ёстой.</li> -->
+        <li><strong>Ctrl key</strong> hold to draw (keeps strokes clean without dragging)</li>
+        <li>Choose a color from the bottom color bar to draw with.</li>
+        <li><strong>Space</strong> button to clear the screen.</li>
+        <li><strong>Ctrl+Z</strong> undo last stroke, <strong>Ctrl+Y</strong> redo.</li>
+      </ul>
+      <button type="button" class="close">Close</button>
+    </div>
+  </div>
+  <div id="colorBar">
+    <!-- <label>Өнгө:</label> -->
+    <button type="button" class="colorBtn active" data-color="#F5D061" title="Gold"></button>
+    <button type="button" class="colorBtn" data-color="#FFFFFF" title="White"></button>
+    <button type="button" class="colorBtn" data-color="#E74C3C" title="Red"></button>
+    <button type="button" class="colorBtn" data-color="#2ECC71" title="Green"></button>
+    <button type="button" class="colorBtn" data-color="#3498DB" title="Blue"></button>
+    <button type="button" class="colorBtn" data-color="#9B59B6" title="Purple"></button>
+    <button type="button" class="colorBtn" data-color="#F39C12" title="Yellow"></button>
+    <button type="button" class="colorBtn" data-color="#1ABC9C" title="Cyan"></button>
+    <div class="customColorWrap" title="Custom color">
+      <input type="color" id="customColor" value="#173ccf" title="Custom color">
+    </div>
+    <button type="button" id="downloadBtn" title="Download drawing">Download</button>
+  </div>
+  <script>
+    var vid = document.getElementById('vid');
+    var c = document.getElementById('c');
+    var ctx = c.getContext('2d');
+    var arr = [];
+    var redoStack = [];
+    var cur = [];
+    var ctrlDraw = false;
+    var draw = false;
+    var sx = null;
+    var sy = null;
+    var currentColor = '#F5D061';
+
+    var customColorWrap = document.querySelector('.customColorWrap');
+    var customColorInput = document.getElementById('customColor');
+
+    document.querySelectorAll('.colorBtn').forEach(function(btn) {
+      btn.style.background = btn.getAttribute('data-color');
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.colorBtn').forEach(function(b) { b.classList.remove('active'); });
+        customColorWrap.classList.remove('active');
+        this.classList.add('active');
+        currentColor = this.getAttribute('data-color');
+      });
+    });
+
+    customColorInput.addEventListener('input', function() {
+      document.querySelectorAll('.colorBtn').forEach(function(b) { b.classList.remove('active'); });
+      customColorWrap.classList.add('active');
+      currentColor = this.value;
+    });
+    customColorInput.addEventListener('change', function() {
+      currentColor = this.value;
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', function() {
+      var w = c.width, h = c.height;
+      var out = document.createElement('canvas');
+      out.width = w;
+      out.height = h;
+      var octx = out.getContext('2d');
+      octx.save();
+      octx.scale(-1, 1);
+      octx.translate(-w, 0);
+      octx.drawImage(vid, 0, 0, w, h);
+      octx.fillStyle = 'rgba(10, 6, 2, 0.85)';
+      octx.fillRect(0, 0, w, h);
+      octx.lineWidth = 6;
+      octx.lineCap = 'round';
+      octx.lineJoin = 'round';
+      octx.shadowBlur = 15;
+      for (var i = 0; i < arr.length; i++) {
+        var stroke = arr[i];
+        octx.shadowColor = stroke.color;
+        octx.strokeStyle = stroke.color;
+        octx.beginPath();
+        for (var j = 0; j < stroke.pts.length; j++) {
+          if (j === 0) octx.moveTo(stroke.pts[j].x, stroke.pts[j].y);
+          else octx.lineTo(stroke.pts[j].x, stroke.pts[j].y);
+        }
+        octx.stroke();
+      }
+      octx.restore();
+      var a = document.createElement('a');
+      a.download = 'drawing-' + Date.now() + '.png';
+      a.href = out.toDataURL('image/png');
+      a.click();
+    });
+
+    var helpOverlay = document.getElementById('helpOverlay');
+    var helpBox = document.getElementById('helpBox');
+    document.getElementById('helpBtn').addEventListener('click', function() {
+      helpOverlay.classList.add('show');
+    });
+    document.querySelector('#helpBox .close').addEventListener('click', function() {
+      helpOverlay.classList.remove('show');
+    });
+    helpOverlay.addEventListener('click', function(e) {
+      if (e.target === helpOverlay) helpOverlay.classList.remove('show');
+    });
+
+    window.onkeydown = function(e) {
+      if (e.key === 'Control') ctrlDraw = true;
+      if (e.code == 'Space') {
+        arr = [];
+        redoStack = [];
+        draw = false;
+        cur = [];
+      }
+      if (e.key === 'Escape') helpOverlay.classList.remove('show');
+      if (e.ctrlKey && e.key === 'z') {
+        e.preventDefault();
+        if (arr.length > 0) {
+          redoStack.push(arr.pop());
+          if (draw) { draw = false; cur = []; }
+        }
+      }
+      if (e.ctrlKey && e.key === 'y') {
+        e.preventDefault();
+        if (redoStack.length > 0) arr.push(redoStack.pop());
+      }
+    }
+    
+    window.onkeyup = function(e) {
+      if (e.key === 'Control') ctrlDraw = false;
+    }
+
+    function run(res) {
+      c.width = window.innerWidth;
+      c.height = window.innerHeight;
+      ctx.drawImage(res.image, 0, 0, c.width, c.height);
+      ctx.fillStyle = 'rgba(10, 6, 2, 0.85)';
+      ctx.fillRect(0, 0, c.width, c.height);
+
+      ctx.lineWidth = 6;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      ctx.shadowBlur = 15;
+
+      for (var i = 0; i < arr.length; i++) {
+        var stroke = arr[i];
+        ctx.shadowColor = stroke.color;
+        ctx.strokeStyle = stroke.color;
+        ctx.beginPath();
+        for (var j = 0; j < stroke.pts.length; j++) {
+          if (j == 0) ctx.moveTo(stroke.pts[j].x, stroke.pts[j].y);
+          else ctx.lineTo(stroke.pts[j].x, stroke.pts[j].y);
+        }
+        ctx.stroke();
+      }
+
+      if (res.multiHandLandmarks && res.multiHandLandmarks.length > 0) {
+        var lm = res.multiHandLandmarks[0];
+        drawConnectors(ctx, lm, HAND_CONNECTIONS, {color: 'rgba(245, 208, 97, 0.3)', lineWidth: 2});
+        drawLandmarks(ctx, lm, {color: '#FFFFFF', lineWidth: 1, radius: 2});
+
+        var ind = lm[8];
+        var rx = ind.x * c.width;
+        var ry = ind.y * c.height;
+
+        if (sx == null) {
+          sx = rx; 
+          sy = ry;
+        } else {
+          sx += (rx - sx) * 0.45;
+          sy += (ry - sy) * 0.45;
+        }
+
+        ctx.beginPath();
+        ctx.arc(sx, sy, 6, 0, 2 * Math.PI);
+        if (ctrlDraw) { 
+          ctx.fillStyle = '#FFFFFF'; 
+        } else { 
+          ctx.fillStyle = 'rgba(245, 208, 97, 0.4)'; 
+        }
+        ctx.fill();
+
+        if (ctrlDraw) {
+          if (!draw) {
+            draw = true;
+            redoStack = [];
+            arr.push({ pts: [], color: currentColor });
+            cur = arr[arr.length - 1].pts;
+          }
+          cur.push({x: sx, y: sy});
+        } else {
+          draw = false;
+        }
+      } else {
+        draw = false;
+        sx = null;
+      }
+    }
+
+    var h = new Hands({
+      locateFile: (file) => {
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+      }
+    });
+    
+    h.setOptions({ 
+      maxNumHands: 1, 
+      modelComplexity: 1, 
+      minDetectionConfidence: 0.5, 
+      minTrackingConfidence: 0.5 
+    });
+    
+    h.onResults(run);
+
+    function showError(msg) {
+      document.body.innerHTML = '<div style="color:#F5D061;font-family:sans-serif;padding:2rem;max-width:520px;line-height:1.6;background:#0d0a06;min-height:100vh;box-sizing:border-box;">' +
+        '<strong>Camera error</strong><br><br>' + msg.replace(/<code>/g, '<code style="background:#1a1510;padding:2px 6px;border-radius:4px;font-family:monospace;">') + '</div>';
+    }
+
+    if (window.location.protocol === 'file:') {
+      showError('Camera does not work when opening the file directly. Run a local server instead, e.g. from this folder: <code>npx serve .</code> or <code>python -m http.server 8000</code> then open http://localhost:8000');
+    } else if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      showError('Camera API not available. Use HTTPS or localhost.');
+    } else {
+      // Let the browser choose the best resolution for this device
+      var cam = new Camera(vid, {
+        onFrame: async () => { await h.send({image: vid}); },
+        facingMode: 'user'
+      });
+      cam.start().catch(function (err) {
+        var msg = err.message || String(err);
+        if (msg.indexOf('NotReadableError') !== -1 || msg.indexOf('Could not start') !== -1) {
+          showError('Could not start the camera. Try: (1) Close other apps using the camera (Zoom, Teams, etc.). ' +
+            '(2) Open this page via HTTPS or localhost, not file://. (3) Allow camera permission and refresh.');
+        } else {
+          showError('Camera error: ' + msg);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
