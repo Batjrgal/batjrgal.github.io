@@ -1,0 +1,51 @@
+/* a.html мөр 2206–2239 — өөр CSS байхгүй */
+.df-sheet .df-page:before {
+  opacity: 0.5;
+}
+
+section.linkAnnotation a,
+a.linkAnnotation,
+.buttonWidgetAnnotation a,
+a.customLinkAnnotation,
+.customHtmlAnnotation,
+.customVideoAnnotation,
+a.df-autolink {
+  background-color: #ff0;
+  opacity: 0.3;
+}
+
+section.linkAnnotation a:hover,
+a.linkAnnotation:hover,
+.buttonWidgetAnnotation a:hover,
+a.customLinkAnnotation:hover,
+.customHtmlAnnotation:hover,
+.customVideoAnnotation:hover,
+a.df-autolink:hover {
+  background-color: #2196f3;
+  opacity: 0.5;
+}
+
+.df-icon-play-popup:before {
+  background-color: rgba(51, 133, 209, 0.7);
+}
+
+.df-icon-play-popup:before {
+  color: #fff;
+}
+
+.df-lightbox-bg {
+  opacity: 0.9;
+}
+
+.df-lightbox-wrapper .df-bg {
+  background-color: transparent;
+}
+
+.df-container.df-transparent.df-fullscreen {
+  background-color: #eee;
+}
+
+/* Lightbox баруун дээд X товч */
+.df-lightbox-close {
+  display: none !important;
+}
