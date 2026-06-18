@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="mn" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" user-scalable="no">
+    <title>Шуудангийн Багаж</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        ink: { DEFAULT: '#141210', 50: '#1c1a17', 100: '#252220', 200: '#3d3835', 300: '#5c5650' },
+                        stamp: { DEFAULT: '#e85d4c', light: '#f4845f', dim: '#c94a3a' },
+                        paper: { DEFAULT: '#f5f0e8', muted: '#e8e0d4' },
+                    },
+                    animation: {
+                        'fade-up': 'fadeUp 0.55s cubic-bezier(0.16,1,0.3,1)',
+                        'fade-up-delay': 'fadeUp 0.55s cubic-bezier(0.16,1,0.3,1) 0.12s both',
+                        'fade-up-delay-2': 'fadeUp 0.55s cubic-bezier(0.16,1,0.3,1) 0.24s both',
+                        'float': 'float 6s ease-in-out infinite',
+                        'float2': 'float2 7s ease-in-out infinite 0.5s',
+                        'float3': 'float3 5.5s ease-in-out infinite 1s',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(-3deg)' },
+                            '50%': { transform: 'translateY(-10px) rotate(3deg)' },
+                        },
+                        float2: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(4deg)' },
+                            '50%': { transform: 'translateY(-8px) rotate(-2deg)' },
+                        },
+                        float3: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(-5deg)' },
+                            '50%': { transform: 'translateY(-12px) rotate(2deg)' },
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        /* Fallback — Tailwind CDN ачаалагдаагүй үед */
+        html { font-family: 'Outfit', system-ui, sans-serif; }
+        body {
+            margin: 0;
+            min-height: 100dvh;
+            background-color: #141210;
+            color: #f5f0e8;
+            -webkit-font-smoothing: antialiased;
+        }
+        a { color: inherit; text-decoration: none; }
+        .bg-dots {
+            background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+        .safe-x {
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
+        }
+        .safe-top { padding-top: max(1rem, env(safe-area-inset-top)); }
+        .safe-bottom { padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
+        .stamp-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 1rem;
+            background-color: #1c1a17;
+            box-shadow: 0 0 0 1px #3d3835;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .stamp-card::before {
+            content: '';
+            pointer-events: none;
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom right, rgba(232,93,76,0.08), transparent, transparent);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .stamp-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 0 0 1px rgba(232,93,76,0.4), 0 12px 40px rgba(232,93,76,0.15);
+        }
+        .stamp-card:hover::before { opacity: 1; }
+        .stamp-card:hover .card-arrow { gap: 0.75rem; }
+        .hero-glow {
+            background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(232,93,76,0.18) 0%, transparent 70%);
+        }
+        .stamp-showcase img {
+            display: block;
+            width: 100%;
+            height: auto;
+            filter: drop-shadow(0 8px 24px rgba(0,0,0,0.45));
+        }
+        .protected-media {
+            -webkit-user-drag: none;
+            user-select: none;
+            -webkit-touch-callout: none;
+        }
+        .protected-shield {
+            cursor: default;
+        }
+        .watermark-overlay {
+            pointer-events: none;
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            /* opacity: 0.22; */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='260' viewBox='0 0 360 260'%3E%3Ctext x='180' y='130' fill='%23ffffff' font-family='Arial,sans-serif' font-size='13' font-weight='700' text-anchor='middle' dominant-baseline='middle' transform='rotate(-28 180 130)'%3EPhotostamp%3C/text%3E%3C/svg%3E");
+            background-repeat: repeat;
+        }
+    </style>
+</head>
+<body class="min-h-dvh overflow-x-hidden bg-ink font-sans text-paper antialiased bg-dots safe-x safe-top safe-bottom">
+
+    <!-- Header -->
+    <header class="mx-auto flex max-w-5xl items-center justify-between py-5 lg:py-6 animate-fade-up">
+        <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-stamp/15 ring-1 ring-stamp/30">
+                <i class="fa-solid fa-envelope-open-text text-lg text-stamp"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-tight text-paper lg:text-xl">Photostamp</h1>
+                <p class="hidden text-xs text-paper-muted/70 sm:block">Марк үүсгэгч</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="mx-auto max-w-5xl pb-12">
+
+        <!-- Hero -->
+        <section class="relative mb-14 text-center lg:mb-20">
+            <!-- <div class="pointer-events-none absolute inset-x-0 -top-8 h-64 hero-glow"></div> -->
+
+            <div class="relative animate-fade-up">
+                <div class="stamp-showcase mx-auto mb-8 flex max-w-md items-end justify-center gap-3 px-4 sm:max-w-lg sm:gap-5">
+                    <div class="protected-wrap animate-float2 relative w-[28%] -rotate-6 sm:w-[30%]">
+                        <img src="https://i.ibb.co/4n7GGLD5/stamp-1781800445772.png" alt="" loading="eager" width="200" height="200" class="protected-media pointer-events-none select-none" draggable="false">
+                        <div class="protected-shield absolute inset-0 z-[1]" aria-hidden="true"></div>
+                        <div class="watermark-overlay" aria-hidden="true"></div>
+                    </div>
+                    <div class="protected-wrap animate-float relative z-10 w-[36%] sm:w-[38%]">
+                        <img src="https://i.ibb.co/dJztRFS7/stamp-1781800476836.png" alt="" loading="eager" width="240" height="240" class="protected-media pointer-events-none select-none" draggable="false">
+                        <div class="protected-shield absolute inset-0 z-[1]" aria-hidden="true"></div>
+                        <div class="watermark-overlay" aria-hidden="true"></div>
+                    </div>
+                    <div class="protected-wrap animate-float3 relative w-[28%] rotate-6 sm:w-[30%]">
+                        <img src="https://i.ibb.co/YBBJ4By4/stamp-1781800645685.png" alt="" loading="eager" width="200" height="200" class="protected-media pointer-events-none select-none" draggable="false">
+                        <div class="protected-shield absolute inset-0 z-[1]" aria-hidden="true"></div>
+                        <div class="watermark-overlay" aria-hidden="true"></div>
+                    </div>
+                </div>
+
+                <h2 class="mx-auto max-w-2xl text-3xl font-bold leading-tight tracking-tight text-paper sm:text-4xl lg:text-5xl">
+                    Шуудангийн зүйлсийг<br>
+                    <span class="text-stamp">хурдан, үнэгүй</span> бүтээ
+                </h2>
+                <p class="mx-auto mt-4 max-w-lg text-sm leading-relaxed text-paper-muted/80 sm:text-base">
+                    Зураг оруулаад жинхэнэ шуудангийн марк болгох, бусад хэрэгслүүд — бүгд браузерт, суулгалтгүй.
+                </p>
+            </div>
+        </section>
+
+        <!-- Tools -->
+        <section class="animate-fade-up-delay">
+            <p class="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60">
+                <i class="fa-solid fa-toolbox text-stamp/70"></i> Багажууд
+            </p>
+
+            <div class="grid gap-4 sm:grid-cols-2 lg:gap-5">
+
+                <!-- Stamp Generator -->
+                <a href="stamp_generator.html" class="stamp-card group block p-6 sm:p-7">
+                    <div class="relative flex flex-col gap-4">
+                        <div class="flex items-start justify-between">
+                            <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-stamp/15 ring-1 ring-stamp/25">
+                                <i class="fa-solid fa-stamp text-xl text-stamp"></i>
+                            </div>
+                            <span class="flex items-center gap-1 rounded-full bg-stamp/10 px-2.5 py-1 text-[11px] font-semibold text-stamp ring-1 ring-stamp/20">
+                                <i class="fa-solid fa-circle text-[6px]"></i> Идэвхтэй
+                            </span>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-bold text-paper">Цоолбор зураг</h3>
+                            <p class="mt-1.5 text-sm leading-relaxed text-paper-muted/75">
+                                Зураг оруулаад долгионтой ирмэг, цагаан хүрээг тохируулж шууд татаж аваарай.
+                            </p>
+                        </div>
+
+                        <ul class="flex flex-wrap gap-2">
+                            <li class="rounded-md bg-ink-100 px-2 py-1 text-[11px] font-medium text-paper-muted/70">Долгионтой ирмэг</li>
+                            <li class="rounded-md bg-ink-100 px-2 py-1 text-[11px] font-medium text-paper-muted/70">PNG татах</li>
+                            <li class="rounded-md bg-ink-100 px-2 py-1 text-[11px] font-medium text-paper-muted/70">Бэлэн загвар</li>
+                        </ul>
+
+                        <span class="card-arrow mt-1 inline-flex items-center gap-2 text-sm font-semibold text-stamp transition-all duration-300">
+                            Эхлүүлэх
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </span>
+                    </div>
+                </a>
+
+                <!-- Coming soon placeholder -->
+                <div class="relative overflow-hidden rounded-2xl bg-ink-50/40 p-6 ring-1 ring-ink-200/60 sm:p-7">
+                    <div class="pointer-events-none absolute inset-0 bg-dots opacity-50"></div>
+                    <div class="relative flex h-full flex-col gap-4 opacity-50">
+                        <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-ink-100 ring-1 ring-ink-200">
+                            <i class="fa-solid fa-plus text-xl text-paper-muted/50"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-paper-muted/60">Удахгүй...</h3>
+                            <p class="mt-1.5 text-sm leading-relaxed text-paper-muted/50">
+                                Шинэ багажууд нэмэгдэхэд энд харагдана.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- Features -->
+        <section class="mt-14 animate-fade-up-delay-2 lg:mt-20">
+            <p class="mb-5 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60">
+                <i class="fa-solid fa-star text-stamp/70"></i> Онцлог
+            </p>
+
+            <div class="grid gap-3 sm:grid-cols-3 sm:gap-4">
+                <div class="rounded-xl bg-ink-50/60 p-5 ring-1 ring-ink-200">
+                    <i class="fa-solid fa-bolt mb-3 block text-lg text-stamp"></i>
+                    <h4 class="text-sm font-semibold text-paper">Шуурхай</h4>
+                    <p class="mt-1 text-xs leading-relaxed text-paper-muted/70">Сервер рүү илгээхгүй, бүх зүйл таны браузерт ажиллана.</p>
+                </div>
+                <div class="rounded-xl bg-ink-50/60 p-5 ring-1 ring-ink-200">
+                    <i class="fa-solid fa-mobile-screen mb-3 block text-lg text-stamp"></i>
+                    <h4 class="text-sm font-semibold text-paper">Утас дээр</h4>
+                    <p class="mt-1 text-xs leading-relaxed text-paper-muted/70">Гар утас, таблет, компьютер — аль ч төхөөрөмж дээр ажиллана.</p>
+                </div>
+                <div class="rounded-xl bg-ink-50/60 p-5 ring-1 ring-ink-200">
+                    <i class="fa-solid fa-download mb-3 block text-lg text-stamp"></i>
+                    <h4 class="text-sm font-semibold text-paper">Чанартай PNG</h4>
+                    <p class="mt-1 text-xs leading-relaxed text-paper-muted/70">Өндөр нягтралтай PNG файл шууд татаж авна.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mx-auto max-w-5xl border-t border-ink-200 py-6 text-center">
+        <p class="text-xs text-paper-muted/50">Шуудангийн Багаж · Үнэгүй онлайн хэрэгслүүд</p>
+    </footer>
+
+    <script>
+        (function () {
+            const GUARD = '.protected-wrap, #previewProtect';
+
+            function isProtected(target) {
+                return target && target.closest && target.closest(GUARD);
+            }
+
+            document.addEventListener('contextmenu', (e) => {
+                if (isProtected(e.target)) e.preventDefault();
+            });
+
+            document.addEventListener('dragstart', (e) => {
+                if (isProtected(e.target)) e.preventDefault();
+            });
+
+            document.addEventListener('copy', (e) => {
+                if (isProtected(e.target)) e.preventDefault();
+            });
+
+            document.addEventListener('cut', (e) => {
+                if (isProtected(e.target)) e.preventDefault();
+            });
+
+            document.addEventListener('selectstart', (e) => {
+                if (isProtected(e.target)) e.preventDefault();
+            });
+        })();
+    </script>
+</body>
+</html>
