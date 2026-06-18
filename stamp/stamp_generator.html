@@ -1,0 +1,1896 @@
+<!DOCTYPE html>
+<html lang="mn" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" user-scalable="no">
+    <title>Шуудангийн Марк Үүсгэгч</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Noto+Sans+Mongolian&family=Roboto:wght@400;700&family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&family=Merriweather:wght@400;700&family=Bebas+Neue&family=Oswald:wght@400;600&family=Pacifico&family=Dancing+Script&family=Caveat:wght@400;700&family=Lobster&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'system-ui', 'sans-serif'] },
+                    colors: {
+                        ink: { DEFAULT: '#141210', 50: '#1c1a17', 100: '#252220', 200: '#3d3835', 300: '#5c5650' },
+                        stamp: { DEFAULT: '#e85d4c', light: '#f4845f', dim: '#c94a3a' },
+                        paper: { DEFAULT: '#f5f0e8', muted: '#e8e0d4' },
+                    },
+                    animation: {
+                        'fade-up': 'fadeUp 0.45s cubic-bezier(0.16,1,0.3,1)',
+                        'fade-in': 'fadeIn 0.3s ease',
+                        'float': 'float 6s ease-in-out infinite',
+                        'float2': 'float2 7s ease-in-out infinite 0.5s',
+                        'float3': 'float3 5.5s ease-in-out infinite 1s',
+                    },
+                    keyframes: {
+                        fadeUp: {
+                            '0%': { opacity: '0', transform: 'translateY(16px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        fadeIn: { '0%': { opacity: '0' }, '100%': { opacity: '1' } },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(-3deg)' },
+                            '50%': { transform: 'translateY(-10px) rotate(3deg)' },
+                        },
+                        float2: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(4deg)' },
+                            '50%': { transform: 'translateY(-8px) rotate(-2deg)' },
+                        },
+                        float3: {
+                            '0%, 100%': { transform: 'translateY(0) rotate(-5deg)' },
+                            '50%': { transform: 'translateY(-12px) rotate(2deg)' },
+                        },
+                    },
+                },
+            },
+        };
+    </script>
+    <style>
+        @font-face {
+            font-family: 'Just Like Heaven';
+            src: url('JustLikeHeavenRegular.woff') format('woff');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+    </style>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .bg-dots {
+                background-image: radial-gradient(circle, rgba(255,255,255,0.04) 1px, transparent 1px);
+                background-size: 20px 20px;
+            }
+            .bg-checker {
+                background: repeating-conic-gradient(#d4cdc3 0% 25%, #e8e0d4 0% 50%) 50% / 14px 14px;
+            }
+            .safe-x {
+                padding-left: max(1rem, env(safe-area-inset-left));
+                padding-right: max(1rem, env(safe-area-inset-right));
+            }
+            .safe-top { padding-top: max(1rem, env(safe-area-inset-top)); }
+            .safe-bottom { padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
+            .safe-bottom-bar { padding-bottom: max(0.75rem, env(safe-area-inset-bottom)); }
+            body.editor-open { padding-bottom: calc(5.5rem + env(safe-area-inset-bottom)); }
+            @media (min-width: 1024px) {
+                body.editor-open { padding-bottom: max(1.5rem, env(safe-area-inset-bottom)); }
+            }
+            input[type="range"] {
+                @apply w-full cursor-pointer touch-pan-y appearance-none bg-transparent;
+            }
+            input[type="range"]::-webkit-slider-runnable-track {
+                @apply h-1.5 rounded-full bg-ink-200;
+            }
+            input[type="range"]::-webkit-slider-thumb {
+                @apply -mt-1 h-4 w-4 appearance-none rounded-full bg-stamp shadow-md ring-2 ring-ink-50;
+            }
+            input[type="range"]::-moz-range-track {
+                @apply h-1.5 rounded-full bg-ink-200;
+            }
+            input[type="range"]::-moz-range-thumb {
+                @apply h-4 w-4 rounded-full border-0 bg-stamp shadow-md;
+            }
+            @media (pointer: coarse) {
+                input[type="range"]::-webkit-slider-thumb { @apply h-5 w-5 -mt-1.5; }
+                input[type="range"]::-moz-range-thumb { @apply h-5 w-5; }
+            }
+            .btn-download {
+                @apply relative overflow-hidden border border-white/10 bg-gradient-to-br from-stamp via-stamp to-stamp-dim text-white shadow-[0_4px_22px_rgba(232,93,76,0.42),inset_0_1px_0_rgba(255,255,255,0.22)] transition-all duration-200;
+            }
+            .btn-download::before {
+                content: '';
+                @apply pointer-events-none absolute inset-0 bg-gradient-to-t from-black/15 to-transparent;
+            }
+            .btn-download::after {
+                content: '';
+                @apply pointer-events-none absolute -inset-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700;
+                transform: translateX(-100%) skewX(-12deg);
+            }
+            .btn-download:hover:not(:disabled) {
+                @apply brightness-110 shadow-[0_8px_30px_rgba(232,93,76,0.55)];
+            }
+            .btn-download:hover:not(:disabled)::after {
+                transform: translateX(100%) skewX(-12deg);
+            }
+            .btn-download:active:not(:disabled) {
+                @apply scale-[0.98] brightness-95;
+            }
+            .btn-download:disabled {
+                @apply opacity-60 shadow-none;
+            }
+            .pattern-preview {
+                @apply mb-1 block h-8 w-full rounded-md ring-1 ring-inset ring-white/10;
+            }
+            .pattern-preview-solid { background: #f5f0e6; }
+            .pattern-preview-dots { background: #f5f0e6 radial-gradient(circle, #d4c9b8 1.5px, transparent 1.5px); background-size: 8px 8px; }
+            .pattern-preview-stripes { background: repeating-linear-gradient(45deg, #f5f0e6, #f5f0e6 4px, #e0d5c4 4px, #e0d5c4 8px); }
+            .pattern-preview-grid { background: #f5f0e6 linear-gradient(#d4c9b8 1px, transparent 1px), linear-gradient(90deg, #d4c9b8 1px, transparent 1px); background-size: 8px 8px; }
+            .pattern-preview-crosshatch { background: repeating-linear-gradient(45deg, transparent, transparent 5px, #d4c9b8 5px, #d4c9b8 6px), repeating-linear-gradient(-45deg, transparent, transparent 5px, #d4c9b8 5px, #d4c9b8 6px); background-color: #f5f0e6; }
+            .pattern-preview-waves { background: #f5f0e6; background-image: repeating-radial-gradient(ellipse at center, transparent 0, transparent 6px, #ddd2c0 6px, #ddd2c0 7px); background-size: 16px 12px; }
+            .pattern-preview-diamond { background: #f5f0e6; background-image: linear-gradient(45deg, #e0d5c4 25%, transparent 25%), linear-gradient(-45deg, #e0d5c4 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #e0d5c4 75%), linear-gradient(-45deg, transparent 75%, #e0d5c4 75%); background-size: 10px 10px; background-position: 0 0, 0 5px, 5px -5px, -5px 0; }
+            .pattern-preview-gradient { background: linear-gradient(135deg, #fff8ee, #f5e6d0, #fff8ee); }
+            .pattern-preview-linen { background: #f5f0e6 repeating-linear-gradient(0deg, transparent, transparent 3px, #e8dfd0 3px, #e8dfd0 4px), repeating-linear-gradient(90deg, transparent, transparent 3px, #e8dfd0 3px, #e8dfd0 4px); }
+            .pattern-preview-circles { background: #f5f0e6 radial-gradient(circle, transparent 40%, #d4c9b8 41%, #d4c9b8 42%, transparent 43%); background-size: 14px 14px; }
+            .protected-media {
+                -webkit-user-drag: none;
+                user-select: none;
+                -webkit-touch-callout: none;
+            }
+            .protected-shield { cursor: default; }
+            .stamp-showcase img {
+                display: block;
+                width: 100%;
+                height: auto;
+                filter: drop-shadow(0 8px 24px rgba(0,0,0,0.45));
+            }
+            .watermark-overlay {
+                pointer-events: none;
+                position: absolute;
+                inset: 0;
+                z-index: 2;
+                opacity: 0.22;
+                background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='260' viewBox='0 0 360 260'%3E%3Ctext x='180' y='130' fill='%23ffffff' font-family='Arial,sans-serif' font-size='13' font-weight='700' text-anchor='middle' dominant-baseline='middle' transform='rotate(-28 180 130)'%3EPhotostamp%3C/text%3E%3C/svg%3E");
+                background-repeat: repeat;
+            }
+            #cropContainer { height: min(52vh, 460px); width: 100%; background: #1c1a17; }
+            #cropContainer .cropper-view-box,
+            #cropContainer .cropper-face { border-radius: 2px; }
+            #cropContainer .cropper-line { background-color: #e85d4c; }
+            #cropContainer .cropper-point {
+                background-color: #e85d4c;
+                width: 10px;
+                height: 10px;
+                opacity: 1;
+            }
+            #cropContainer .cropper-dashed { border-color: rgba(245, 240, 232, 0.35); }
+            #cropContainer .cropper-modal { background: rgba(20, 18, 16, 0.65); }
+            #cropContainer .cropper-view-box { outline: 2px solid #e85d4c; }
+            .tool-tab {
+                @apply flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-2.5 text-[11px] font-semibold transition-all duration-200;
+            }
+            #textDragLayer {
+                /* border: 1px dashed rgba(232, 93, 76, 0.35); */
+                /* border-radius: 2px; */
+                touch-action: none;
+            }
+            #textDragLayer.dragging { cursor: grabbing; }
+            #textDragLayer:not(.hidden) { cursor: grab; }
+            @media (max-width: 1023px) {
+                #editor .tool-panel.hidden { display: none; }
+            }
+        }
+    </style>
+</head>
+<body class="min-h-dvh overflow-x-hidden bg-ink font-sans text-paper antialiased bg-dots safe-x safe-top safe-bottom">
+
+    <!-- Top bar -->
+    <header class="mx-auto flex max-w-6xl items-center justify-between py-5 lg:py-6">
+        <div class="flex items-center gap-3">
+            <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-stamp/15 ring-1 ring-stamp/30">
+                <i class="fa-solid fa-stamp text-lg text-stamp"></i>
+            </div>
+            <div>
+                <h1 class="text-lg font-bold tracking-tight text-paper lg:text-xl">Марк Үүсгэгч</h1>
+                <p class="hidden text-xs text-paper-muted/70 sm:block">Долгионтой ирмэгтэй PNG</p>
+            </div>
+        </div>
+        <button type="button" id="headerResetBtn" class="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-paper-muted transition-colors hover:bg-ink-100 hover:text-paper">
+            <i class="fa-solid fa-rotate-left text-sm"></i>
+            Шинэ зураг
+        </button>
+    </header>
+
+    <main class="mx-auto max-w-6xl pb-4">
+
+        <!-- Landing -->
+        <section id="landingView" class="animate-fade-up">
+            <div class="stamp-showcase mx-auto mb-8 flex max-w-md items-end justify-center gap-3 px-4 sm:max-w-lg sm:gap-5">
+                <div class="protected-wrap animate-float2 relative w-[28%] -rotate-6 sm:w-[30%]">
+                    <img src="https://i.ibb.co/4n7GGLD5/stamp-1781800445772.png" alt="" loading="eager" width="200" height="200" class="protected-media pointer-events-none select-none" draggable="false">
+                    <div class="protected-shield absolute inset-0 z-[1]" aria-hidden="true"></div>
+                    <div class="watermark-overlay" aria-hidden="true"></div>
+                </div>
+                <div class="protected-wrap animate-float relative z-10 w-[36%] sm:w-[38%]">
+                    <img src="https://i.ibb.co/dJztRFS7/stamp-1781800476836.png" alt="" loading="eager" width="240" height="240" class="protected-media pointer-events-none select-none" draggable="false">
+                    <div class="protected-shield absolute inset-0 z-[1]" aria-hidden="true"></div>
+                    <div class="watermark-overlay" aria-hidden="true"></div>
+                </div>
+                <div class="protected-wrap animate-float3 relative w-[28%] rotate-6 sm:w-[30%]">
+                    <img src="https://i.ibb.co/YBBJ4By4/stamp-1781800645685.png" alt="" loading="eager" width="200" height="200" class="protected-media pointer-events-none select-none" draggable="false">
+                    <div class="protected-shield absolute inset-0 z-[1]" aria-hidden="true"></div>
+                    <div class="watermark-overlay" aria-hidden="true"></div>
+                </div>
+            </div>
+
+            <div class="mb-8 text-center lg:mb-10">
+                <h2 class="mx-auto max-w-lg text-3xl font-bold leading-tight tracking-tight text-paper sm:text-4xl lg:text-5xl">
+                    Зургаа <span class="text-stamp">жинхэнэ марк</span> болгоорой
+                </h2>
+                <p class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-paper-muted/80 sm:text-base">
+                    Зураг оруулаад долгионтой ирмэг, цагаан хүрээг тохируулж PNG татаж аваарай
+                </p>
+            </div>
+
+            <div
+                id="uploadZone"
+                role="button"
+                tabindex="0"
+                aria-label="Зураг сонгох"
+                class="group relative mx-auto max-w-xl cursor-pointer overflow-hidden rounded-2xl border border-dashed border-ink-200 bg-ink-50/60 p-10 text-center transition-all duration-300 hover:border-stamp/50 hover:bg-ink-50 sm:p-14"
+            >
+                <div class="pointer-events-none absolute inset-0 bg-gradient-to-b from-stamp/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100"></div>
+                <div class="relative">
+                    <div class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-ink-100 ring-1 ring-ink-200 transition-transform group-hover:scale-105">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-stamp"></i>
+                    </div>
+                    <p class="text-base font-semibold text-paper sm:text-lg">Зураг сонгох эсвэл чирэх</p>
+                    <p class="mt-1 hidden text-sm text-paper-muted/70 md:block">Эсвэл <kbd class="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-xs text-paper-muted">Ctrl+V</kbd> дарж оруулах</p>
+                    <p class="mt-3 text-xs text-paper-muted/50">JPG · PNG · WebP · GIF — 15 MB хүртэл</p>
+                </div>
+                <input type="file" id="fileInput" accept="image/jpeg,image/png,image/webp,image/gif" class="hidden">
+            </div>
+        </section>
+
+        <!-- Editor -->
+        <section id="editor" class="hidden animate-fade-up">
+            <div class="grid gap-3 lg:grid-cols-[1fr_340px] lg:gap-8 xl:grid-cols-[1fr_380px]">
+
+                <!-- Preview panel -->
+                <div class="order-1 lg:order-none">
+                    <div class="rounded-2xl bg-ink-50 ring-1 ring-ink-200 lg:sticky lg:top-6">
+                        <div class="flex items-center justify-between border-b border-ink-200 px-3 py-2.5 sm:px-5 sm:py-3">
+                            <span class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60">
+                                <i class="fa-solid fa-eye text-stamp/70"></i>
+                                <span class=" sm:inline">Урьдчилан харах</span>
+                            </span>
+                            <div class="flex items-center gap-2">
+                                <span id="sizeInfo" class="hidden max-w-[42vw] truncate rounded-md bg-ink-100 px-2 py-0.5 font-mono text-[10px] text-paper-muted/70 sm:inline-block sm:max-w-none sm:text-[11px]"></span>
+                                <button type="button" id="cropBtn" class="flex items-center gap-1.5 rounded-lg border border-ink-200 bg-ink-100/80 px-2.5 py-1.5 text-xs font-semibold text-paper-muted transition-colors hover:border-stamp/40 hover:text-stamp" title="Зураг таслах">
+                                    <i class="fa-solid fa-crop-simple"></i>
+                                    <span class=" sm:inline">Тайрах</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="bg-checker overflow-auto rounded-b-2xl p-3 sm:p-6 lg:p-8 [-webkit-overflow-scrolling:touch]">
+                            <div id="previewProtect" class="relative mx-auto w-full max-w-full">
+                                <canvas id="previewCanvas" class="protected-media pointer-events-none mx-auto block max-w-full select-none rounded-sm"></canvas>
+                                <div class="protected-shield absolute inset-0 z-[1]" aria-hidden="true"></div>
+                                <div id="textDragLayer" class="absolute z-[3] hidden touch-none select-none" aria-label="Текст чирж байрлуулах">
+                                    <div id="textDragHandle" class="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2">
+                                        <!-- <div class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-dashed border-stamp bg-ink/70 shadow-lg ring-2 ring-stamp/20 backdrop-blur-sm">
+                                            <i class="fa-solid fa-up-down-left-right text-sm text-stamp"></i>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls sidebar -->
+                <aside id="toolsAside" class="order-2 flex flex-col gap-3 lg:order-none lg:gap-4">
+
+                    <!-- Mobile tool tabs -->
+                    <div id="mobileToolsTabs" class="sticky top-2 z-20 grid grid-cols-3 gap-1 rounded-2xl bg-ink/90 p-1 ring-1 ring-ink-200 backdrop-blur-md lg:hidden">
+                        <button type="button" class="tool-tab border-stamp bg-stamp/10 text-stamp ring-1 ring-stamp/25" data-tool-tab="border" aria-selected="true">
+                            <i class="fa-solid fa-border-all text-sm"></i>
+                            <span>Ирмэг</span>
+                        </button>
+                        <button type="button" class="tool-tab text-paper-muted hover:bg-ink-100/50 hover:text-paper" data-tool-tab="text" aria-selected="false">
+                            <i class="fa-solid fa-font text-sm"></i>
+                            <span class="flex items-center gap-1">Текст <span id="textTabDot" class="hidden h-1.5 w-1.5 rounded-full bg-stamp"></span></span>
+                        </button>
+                        <button type="button" class="tool-tab text-paper-muted hover:bg-ink-100/50 hover:text-paper" data-tool-tab="color" aria-selected="false">
+                            <i class="fa-solid fa-palette text-sm"></i>
+                            <span>Өнгө</span>
+                        </button>
+                    </div>
+
+                    <!-- Presets -->
+                    <!-- <div class="rounded-2xl bg-ink-50 p-4 ring-1 ring-ink-200">
+                        <p class="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60">
+                            <i class="fa-solid fa-wand-magic-sparkles text-stamp/70"></i> Бэлэн загвар
+                        </p>
+                        <div id="presets" class="grid grid-cols-3 gap-2">
+                            <button type="button" class="preset-btn rounded-xl border border-stamp bg-stamp/10 px-2 py-3 text-center transition-all hover:border-stamp/60" data-preset="standard">
+                                <i class="preset-icon fa-solid fa-stamp block text-lg text-stamp"></i>
+                                <span class="preset-label mt-1 block text-[11px] font-semibold text-stamp">Стандарт</span>
+                            </button>
+                            <button type="button" class="preset-btn rounded-xl border border-ink-200 bg-ink-100/50 px-2 py-3 text-center transition-all hover:border-ink-300" data-preset="imageOnly">
+                                <i class="preset-icon fa-solid fa-image block text-lg text-paper-muted"></i>
+                                <span class="preset-label mt-1 block text-[11px] font-semibold text-paper-muted">Зөвхөн зураг</span>
+                            </button>
+                            <button type="button" class="preset-btn rounded-xl border border-ink-200 bg-ink-100/50 px-2 py-3 text-center transition-all hover:border-ink-300" data-preset="print">
+                                <i class="preset-icon fa-solid fa-print block text-lg text-paper-muted"></i>
+                                <span class="preset-label mt-1 block text-[11px] font-semibold text-paper-muted">Хэвлэл</span>
+                            </button>
+                        </div>
+                    </div> -->
+
+                    <!-- Sliders -->
+                    <div data-tool-panel="border" class="tool-panel rounded-2xl bg-ink-50 p-4 ring-1 ring-ink-200">
+                        <p class="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60">
+                            <i class="fa-solid fa-border-all text-stamp/70"></i> Ирмэг & хүрээ
+                        </p>
+                        <div class="space-y-5">
+                            <div>
+                                <div class="mb-2 flex items-center justify-between">
+                                    <label class="text-sm font-medium text-paper-muted">Хүрээ</label>
+                                    <span id="borderVal" class="rounded-md bg-ink-100 px-2 py-0.5 font-mono text-xs font-semibold text-stamp">6%</span>
+                                </div>
+                                <input type="range" id="borderSlider" min="0" max="15" value="6" step="1">
+                            </div>
+                            <div>
+                                <div class="mb-2 flex items-center justify-between">
+                                    <label class="text-sm font-medium text-paper-muted">Ирмэгийн нягтрал</label>
+                                    <span id="densityVal" class="rounded-md bg-ink-100 px-2 py-0.5 font-mono text-xs font-semibold text-stamp">5%</span>
+                                </div>
+                                <input type="range" id="densitySlider" min="3" max="12" value="5" step="1">
+                            </div>
+                            <div>
+                                <div class="mb-2 flex items-center justify-between">
+                                    <label class="text-sm font-medium text-paper-muted">Цоолборын хэмжээ</label>
+                                    <span id="holeVal" class="rounded-md bg-ink-100 px-2 py-0.5 font-mono text-xs font-semibold text-stamp">100%</span>
+                                </div>
+                                <input type="range" id="holeSlider" min="60" max="140" value="100" step="5">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Text overlay -->
+                    <div id="textSection" data-tool-panel="text" class="tool-panel hidden rounded-2xl bg-ink-50 p-4 ring-1 ring-ink-200 lg:block">
+                        <div class="mb-4 flex items-center justify-between gap-2">
+                            <p class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60">
+                                <i class="fa-solid fa-font text-stamp/70"></i> Текст
+                            </p>
+                            <label class="flex shrink-0 cursor-pointer items-center gap-2">
+                                <input type="checkbox" id="textEnabled" class="h-4 w-4 rounded border-ink-300 bg-ink-100 text-stamp focus:ring-stamp/40">
+                                <span class="text-xs font-medium text-paper-muted">Идэвхжүүлэх</span>
+                            </label>
+                        </div>
+                        <div id="textControls" class="space-y-4 opacity-40 pointer-events-none">
+                            <input type="text" id="textInput" maxlength="80" placeholder="Текст бичнэ үү..." class="w-full rounded-xl border border-ink-200 bg-ink-100/80 px-3 py-2.5 text-sm text-paper placeholder:text-paper-muted/40 focus:border-stamp/50 focus:outline-none focus:ring-2 focus:ring-stamp/20">
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-paper-muted">Фонт</label>
+                                <select id="textFont" class="w-full cursor-pointer rounded-xl border border-ink-200 bg-ink-100/80 px-3 py-2.5 text-sm text-paper focus:border-stamp/50 focus:outline-none focus:ring-2 focus:ring-stamp/20">
+                                    <option value="Outfit" style="font-family:Outfit,sans-serif">Outfit</option>
+                                    <option value="Just Like Heaven" style="font-family:'Just Like Heaven',cursive">Just Like Heaven</option>
+                                    <option value="Noto Sans Mongolian" style="font-family:'Noto Sans Mongolian',sans-serif">Noto Sans</option>
+                                    <option value="Roboto" style="font-family:Roboto,sans-serif">Roboto</option>
+                                    <option value="Montserrat" style="font-family:Montserrat,sans-serif">Montserrat</option>
+                                    <option value="Playfair Display" style="font-family:'Playfair Display',serif">Playfair</option>
+                                    <option value="Merriweather" style="font-family:Merriweather,serif">Merriweather</option>
+                                    <option value="Bebas Neue" style="font-family:'Bebas Neue',sans-serif">Bebas Neue</option>
+                                    <option value="Oswald" style="font-family:Oswald,sans-serif">Oswald</option>
+                                    <option value="Pacifico" style="font-family:Pacifico,cursive">Pacifico</option>
+                                    <option value="Dancing Script" style="font-family:'Dancing Script',cursive">Dancing Script</option>
+                                    <option value="Caveat" style="font-family:Caveat,cursive">Caveat</option>
+                                    <option value="Lobster" style="font-family:Lobster,cursive">Lobster</option>
+                                </select>
+                            </div>
+                            <div>
+                                <div class="mb-2 flex items-center justify-between">
+                                    <label class="text-sm font-medium text-paper-muted">Хэмжээ</label>
+                                    <span id="textSizeVal" class="rounded-md bg-ink-100 px-2 py-0.5 font-mono text-xs font-semibold text-stamp">8%</span>
+                                </div>
+                                <input type="range" id="textSizeSlider" min="3" max="22" value="8" step="1">
+                            </div>
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-paper-muted">Өнгө</label>
+                                <div class="flex items-center gap-2">
+                                    <button type="button" class="text-color-swatch h-9 w-9 rounded-full ring-2 ring-stamp ring-offset-2 ring-offset-ink-50" data-color="#ffffff" style="background:#fff" title="Цагаан"></button>
+                                    <button type="button" class="text-color-swatch h-9 w-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-ink-50" data-color="#141210" style="background:#141210" title="Хар"></button>
+                                    <button type="button" class="text-color-swatch h-9 w-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-ink-50" data-color="#e85d4c" style="background:#e85d4c" title="Улаан"></button>
+                                    <button type="button" class="text-color-swatch h-9 w-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-ink-50" data-color="#fef9c3" style="background:#fef9c3" title="Шаргал"></button>
+                                    <input type="color" id="textColorPicker" value="#ffffff" title="Өөр өнгө" class="h-9 w-12 cursor-pointer rounded-lg border border-ink-200 bg-ink-100 p-0.5">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-paper-muted">Байрлал</label>
+                                <p class="mb-3 flex items-center gap-1.5 text-[11px] text-paper-muted/55">
+                                    <i class="fa-solid fa-hand-pointer text-stamp/70"></i>
+                                    Preview дээр чирж байрлуулна
+                                </p>
+                                <div id="textPosBtns" class="mb-3 grid grid-cols-3 gap-2">
+                                    <button type="button" class="text-pos-btn rounded-lg border border-ink-200 bg-ink-100/50 px-2 py-2 text-xs font-semibold text-paper-muted transition-all hover:border-ink-300" data-y="14">Дээд</button>
+                                    <button type="button" class="text-pos-btn rounded-lg border border-ink-200 bg-ink-100/50 px-2 py-2 text-xs font-semibold text-paper-muted transition-all hover:border-ink-300" data-y="50">Төв</button>
+                                    <button type="button" class="text-pos-btn rounded-lg border border-stamp bg-stamp/10 px-2 py-2 text-xs font-semibold text-stamp transition-all" data-y="86">Доод</button>
+                                </div>
+                                <div class="space-y-3">
+                                    <div>
+                                        <div class="mb-1 flex justify-between text-xs text-paper-muted/70">
+                                            <span>Хэвтээ</span>
+                                            <span id="textXVal" class="font-mono text-stamp">50%</span>
+                                        </div>
+                                        <input type="range" id="textXSlider" min="5" max="95" value="50" step="1">
+                                    </div>
+                                    <div>
+                                        <div class="mb-1 flex justify-between text-xs text-paper-muted/70">
+                                            <span>Босоо</span>
+                                            <span id="textYVal" class="font-mono text-stamp">86%</span>
+                                        </div>
+                                        <input type="range" id="textYSlider" min="5" max="95" value="86" step="1">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-4">
+                                <label class="flex cursor-pointer items-center gap-2">
+                                    <input type="checkbox" id="textBold" class="h-4 w-4 rounded border-ink-300 bg-ink-100 text-stamp focus:ring-stamp/40">
+                                    <span class="text-sm text-paper-muted">Тод</span>
+                                </label>
+                                <label class="flex cursor-pointer items-center gap-2">
+                                    <input type="checkbox" id="textShadow" checked class="h-4 w-4 rounded border-ink-300 bg-ink-100 text-stamp focus:ring-stamp/40">
+                                    <span class="text-sm text-paper-muted">Сүүдэр</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color & export -->
+                    <div data-tool-panel="color" class="tool-panel hidden rounded-2xl bg-ink-50 p-4 ring-1 ring-ink-200 lg:block">
+                        <p class="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60">
+                            <i class="fa-solid fa-palette text-stamp/70"></i> Өнгө & чанар
+                        </p>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="mb-2 block text-sm font-medium text-paper-muted">Хүрээний өнгө</label>
+                                <div class="flex items-center gap-2">
+                                    <div id="colorSwatches" class="flex gap-2">
+                                        <button type="button" class="swatch h-9 w-9 scale-110 rounded-full ring-2 ring-stamp ring-offset-2 ring-offset-ink-50 transition-transform hover:scale-110" data-color="#ffffff" style="background:#fff" title="Цагаан" aria-label="Цагаан"></button>
+                                        <button type="button" class="swatch h-9 w-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-ink-50 transition-transform hover:scale-110" data-color="#f5f0e6" style="background:#f5f0e6" title="Крем" aria-label="Крем"></button>
+                                        <button type="button" class="swatch h-9 w-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-ink-50 transition-transform hover:scale-110" data-color="#fef9c3" style="background:#fef9c3" title="Шаргал" aria-label="Шаргал"></button>
+                                    </div>
+                                    <input type="color" id="borderColorPicker" value="#ffffff" title="Өөр өнгө" class="h-9 w-12 cursor-pointer rounded-lg border border-ink-200 bg-ink-100 p-0.5">
+                                </div>
+                            </div>
+                            <div id="patternSection">
+                                <label class="mb-2 block text-sm font-medium text-paper-muted">Хүрээний загвар</label>
+                                <div id="patternBtns" class="grid grid-cols-4 gap-1.5 sm:grid-cols-5">
+                                    <button type="button" class="pattern-btn rounded-lg border border-stamp bg-stamp/10 p-1.5 transition-all hover:border-stamp/60" data-pattern="solid" title="Цаван">
+                                        <span class="pattern-preview pattern-preview-solid"></span>
+                                        <span class="pattern-label block text-center text-[9px] font-semibold text-stamp">Энгийн</span>
+                                    </button>
+                                    <button type="button" class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300" data-pattern="dots" title="Цэгүүд">
+                                        <span class="pattern-preview pattern-preview-dots"></span>
+                                        <span class="pattern-label block text-center text-[9px] font-semibold text-paper-muted">Цэг</span>
+                                    </button>
+                                    <button type="button" class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300" data-pattern="stripes" title="Судал">
+                                        <span class="pattern-preview pattern-preview-stripes"></span>
+                                        <span class="pattern-label block text-center text-[9px] font-semibold text-paper-muted">Судал</span>
+                                    </button>
+                                    <button type="button" class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300" data-pattern="grid" title="Тор">
+                                        <span class="pattern-preview pattern-preview-grid"></span>
+                                        <span class="pattern-label block text-center text-[9px] font-semibold text-paper-muted">Тор</span>
+                                    </button>
+                                    <button type="button" class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300" data-pattern="crosshatch" title="Холбоос">
+                                        <span class="pattern-preview pattern-preview-crosshatch"></span>
+                                        <span class="pattern-label block text-center text-[9px] font-semibold text-paper-muted">Холбоос</span>
+                                    </button>
+                                    <button type="button" class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300" data-pattern="waves" title="Долгион">
+                                        <span class="pattern-preview pattern-preview-waves"></span>
+                                        <span class="pattern-label block text-center text-[9px] font-semibold text-paper-muted">Долгион</span>
+                                    </button>
+                                    <button type="button" class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300" data-pattern="diamond" title="Алмазан">
+                                        <span class="pattern-preview pattern-preview-diamond"></span>
+                                        <span class="pattern-label block text-center text-[9px] font-semibold text-paper-muted">Алмазан</span>
+                                    </button>
+                                    <button type="button" class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300" data-pattern="gradient" title="Градиент">
+                                        <span class="pattern-preview pattern-preview-gradient"></span>
+                                        <span class="pattern-label block text-center text-[9px] font-semibold text-paper-muted">Градиент</span>
+                                    </button>
+                                    <button type="button" class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300" data-pattern="linen" title="Даавуу">
+                                        <span class="pattern-preview pattern-preview-linen"></span>
+                                        <span class="pattern-label block text-center text-[9px] font-semibold text-paper-muted">Даавуу</span>
+                                    </button>
+                                    <button type="button" class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300" data-pattern="circles" title="Тойрог">
+                                        <span class="pattern-preview pattern-preview-circles"></span>
+                                        <span class="pattern-label block text-center text-[9px] font-semibold text-paper-muted">Тойрог</span>
+                                    </button>
+                                </div>
+                                <p id="patternHint" class="mt-2 hidden text-[10px] text-paper-muted/50">Загвар харагдахын тулд цагаан хүрээ нэмнэ үү</p>
+                            </div>
+                            <!-- <div>
+                                <label class="mb-2 block text-sm font-medium text-paper-muted">Экспортын чанар</label>
+                                <div id="scaleBtns" class="grid grid-cols-3 gap-2">
+                                    <button type="button" class="scale-btn rounded-xl border border-stamp bg-stamp/10 py-2.5 text-sm font-bold text-stamp transition-all" data-scale="1">1×</button>
+                                    <button type="button" class="scale-btn rounded-xl border border-ink-200 bg-ink-100/50 py-2.5 text-sm font-bold text-paper-muted transition-all hover:border-ink-300" data-scale="2">2×</button>
+                                    <button type="button" class="scale-btn rounded-xl border border-ink-200 bg-ink-100/50 py-2.5 text-sm font-bold text-paper-muted transition-all hover:border-ink-300" data-scale="3">3×</button>
+                                </div>
+                            </div> -->
+                        </div>
+                    </div>
+
+                    <!-- Desktop actions -->
+                    <div id="desktopActions" class="hidden flex-col gap-2 lg:flex">
+                        <button type="button" id="downloadBtnDesktop" class="btn-download flex w-full items-center justify-center rounded-2xl px-4 py-3.5">
+                            <span class="relative flex items-center gap-3">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20 shadow-inner ring-1 ring-inset ring-white/25 backdrop-blur-sm">
+                                    <i class="fa-solid fa-download text-base"></i>
+                                </span>
+                                <span class="flex flex-col items-start text-left leading-none">
+                                    <span class="text-[15px] font-bold tracking-wide">Татаж авах</span>
+                                    <!-- <span class="mt-1 text-[11px] font-medium text-white/75">PNG · тунгалаг фон</span> -->
+                                </span>
+                            </span>
+                        </button>
+                        <button type="button" id="copyBtnDesktop" class="hidden flex w-full items-center justify-center gap-2 rounded-xl border border-ink-200 bg-ink-100/50 py-3 text-sm font-semibold text-paper-muted transition-colors hover:border-ink-300 hover:text-paper disabled:opacity-50">
+                            <i class="fa-regular fa-copy"></i>
+                            Хуулах
+                        </button>
+                    </div>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile action bar -->
+    <div id="mobileActions" class="fixed inset-x-0 bottom-0 z-40 hidden border-t border-ink-200 bg-ink/90 px-4 pt-3 backdrop-blur-xl safe-bottom-bar lg:hidden">
+        <div class="mx-auto flex max-w-lg gap-2">
+            <button type="button" id="copyBtn" class="hidden flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-ink-100 text-paper-muted transition-colors hover:text-paper disabled:opacity-50" aria-label="Хуулах">
+                <i class="fa-regular fa-copy text-lg"></i>
+            </button>
+            <button type="button" id="downloadBtn" class="btn-download flex h-[52px] flex-1 items-center justify-center rounded-2xl px-3">
+                <span class="relative flex w-full items-center justify-center gap-2.5 sm:gap-3">
+                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/20 ring-1 ring-inset ring-white/25 backdrop-blur-sm">
+                        <i class="fa-solid fa-download text-sm"></i>
+                    </span>
+                    <span class="flex min-w-0 flex-col items-start text-left leading-none">
+                        <span class="text-sm font-bold tracking-wide">Татаж авах</span>
+                        <!-- <span class="mt-0.5 text-[10px] font-medium text-white/75">PNG файл</span> -->
+                    </span>
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <div id="loadingOverlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-ink/80 backdrop-blur-sm">
+        <div class="flex flex-col items-center gap-3">
+            <i class="fa-solid fa-spinner fa-spin text-3xl text-stamp"></i>
+            <span class="text-sm text-paper-muted">Ачаалж байна...</span>
+        </div>
+    </div>
+
+    <!-- Crop modal -->
+    <div id="cropModal" class="fixed inset-0 z-[60] hidden items-center justify-center bg-ink/90 p-3 backdrop-blur-sm sm:p-4">
+        <div class="flex max-h-[96dvh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-ink-50 ring-1 ring-ink-200">
+            <div class="flex items-center justify-between border-b border-ink-200 px-4 py-3 sm:px-5">
+                <div>
+                    <h3 class="text-sm font-bold text-paper sm:text-base">Зураг таслах</h3>
+                    <p class="text-xs text-paper-muted/60">Хэмжээгээ тохируулаад хадгална уу</p>
+                </div>
+                <button type="button" id="cropCloseBtn" class="flex h-9 w-9 items-center justify-center rounded-lg text-paper-muted transition-colors hover:bg-ink-100 hover:text-paper" aria-label="Хаах">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+            <div class="min-h-0 flex-1 overflow-hidden p-3 sm:p-4">
+                <div id="cropContainer">
+                    <img id="cropImage" src="" alt="Таслах зураг" class="block max-w-full">
+                </div>
+            </div>
+            <div class="border-t border-ink-200 p-4 sm:px-5">
+                <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-paper-muted/60">Харьцаа</p>
+                <div id="cropRatioBtns" class="mb-4 flex flex-wrap gap-2">
+                    <button type="button" class="crop-ratio-btn rounded-lg border border-stamp bg-stamp/10 px-3 py-1.5 text-xs font-semibold text-stamp" data-ratio="free">Чөлөөт</button>
+                    <button type="button" class="crop-ratio-btn rounded-lg border border-ink-200 bg-ink-100/50 px-3 py-1.5 text-xs font-semibold text-paper-muted" data-ratio="1">1:1</button>
+                    <button type="button" class="crop-ratio-btn rounded-lg border border-ink-200 bg-ink-100/50 px-3 py-1.5 text-xs font-semibold text-paper-muted" data-ratio="1.333333">4:3</button>
+                    <button type="button" class="crop-ratio-btn rounded-lg border border-ink-200 bg-ink-100/50 px-3 py-1.5 text-xs font-semibold text-paper-muted" data-ratio="0.75">3:4</button>
+                    <button type="button" class="crop-ratio-btn rounded-lg border border-ink-200 bg-ink-100/50 px-3 py-1.5 text-xs font-semibold text-paper-muted" data-ratio="1.777778">16:9</button>
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" id="cropCancelBtn" class="flex-1 rounded-xl border border-ink-200 bg-ink-100/50 py-3 text-sm font-semibold text-paper-muted transition-colors hover:border-ink-300 hover:text-paper">Болих</button>
+                    <button type="button" id="cropApplyBtn" class="flex-1 rounded-xl bg-stamp py-3 text-sm font-bold text-white shadow-lg shadow-stamp/25 transition-all hover:bg-stamp-dim">
+                        <i class="fa-solid fa-check mr-1"></i> Хадгалах
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast" role="status" class="pointer-events-none fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-1/2 z-[100] max-w-[calc(100vw-2rem)] -translate-x-1/2 translate-y-8 rounded-xl bg-ink-100 px-5 py-3 text-center text-sm font-medium text-paper opacity-0 shadow-xl ring-1 ring-ink-200 transition-all duration-300"></div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const MAX_FILE_SIZE = 15 * 1024 * 1024;
+        const STORAGE_KEY = 'stamp-generator-settings';
+        const WATERMARK_TEXT = 'Photostamp';
+
+        const PRESETS = {
+            standard: { border: 6, density: 5, hole: 100, color: '#ffffff', pattern: 'solid', scale: 1 },
+            imageOnly: { border: 0, density: 5, hole: 100, color: '#ffffff', pattern: 'solid', scale: 1 },
+            print: { border: 8, density: 4, hole: 90, color: '#f5f0e6', pattern: 'linen', scale: 2 }
+        };
+
+        const TOOL_TAB_ACTIVE = ['border-stamp', 'bg-stamp/10', 'text-stamp', 'ring-1', 'ring-stamp/25'];
+        const TOOL_TAB_INACTIVE = ['text-paper-muted', 'hover:bg-ink-100/50', 'hover:text-paper'];
+        const CROP_RATIO_ACTIVE = ['border-stamp', 'bg-stamp/10', 'text-stamp'];
+        const CROP_RATIO_INACTIVE = ['border-ink-200', 'bg-ink-100/50', 'text-paper-muted'];
+        const PATTERN_ACTIVE = ['border-stamp', 'bg-stamp/10'];
+        const PATTERN_INACTIVE = ['border-ink-200', 'bg-ink-100/50'];
+        const PATTERN_LABEL_ACTIVE = ['text-stamp'];
+        const PATTERN_LABEL_INACTIVE = ['text-paper-muted'];
+
+        const PRESET_ACTIVE = ['border-stamp', 'bg-stamp/10'];
+        const PRESET_INACTIVE = ['border-ink-200', 'bg-ink-100/50'];
+        const PRESET_TEXT_ACTIVE = ['text-stamp'];
+        const PRESET_TEXT_INACTIVE = ['text-paper-muted'];
+        const PRESET_ICON_ACTIVE = ['text-stamp'];
+        const PRESET_ICON_INACTIVE = ['text-paper-muted'];
+        const DL_BTN_HTML = `
+            <span class="relative flex items-center gap-3">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20 shadow-inner ring-1 ring-inset ring-white/25 backdrop-blur-sm">
+                    <i class="fa-solid fa-download text-base"></i>
+                </span>
+                <span class="flex flex-col items-start text-left leading-none">
+                    <span class="text-[15px] font-bold tracking-wide">Татаж авах</span>
+                    
+                </span>
+            </span>`;
+        const DL_BTN_HTML_MOBILE = `
+            <span class="relative flex w-full items-center justify-center gap-2.5">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/20 ring-1 ring-inset ring-white/25 backdrop-blur-sm">
+                    <i class="fa-solid fa-download text-sm"></i>
+                </span>
+                <span class="flex flex-col items-start text-left leading-none">
+                    <span class="text-sm font-bold tracking-wide">Татаж авах</span>
+                    <span class="mt-0.5 text-[10px] font-medium text-white/75">PNG файл</span>
+                </span>
+            </span>`;
+        const DL_LOADING_HTML = `
+            <span class="relative flex items-center gap-3">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20 ring-1 ring-inset ring-white/25">
+                    <i class="fa-solid fa-spinner fa-spin text-base"></i>
+                </span>
+                <span class="text-sm font-bold tracking-wide">Бэлтгэж байна...</span>
+            </span>`;
+        const DL_LOADING_HTML_MOBILE = `
+            <span class="relative flex items-center gap-2.5">
+                <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/20 ring-1 ring-inset ring-white/25">
+                    <i class="fa-solid fa-spinner fa-spin text-sm"></i>
+                </span>
+                <span class="text-sm font-bold">Бэлтгэж байна...</span>
+            </span>`;
+        const SCALE_ACTIVE = ['border-stamp', 'bg-stamp/10', 'text-stamp'];
+        const SCALE_INACTIVE = ['border-ink-200', 'bg-ink-100/50', 'text-paper-muted'];
+        const SWATCH_ACTIVE = ['ring-stamp', 'scale-110'];
+        const SWATCH_INACTIVE = ['ring-transparent', 'scale-100'];
+        const DRAGOVER = ['border-stamp/50', 'bg-stamp/5', 'scale-[1.01]'];
+
+        const $ = (id) => document.getElementById(id);
+
+        const landingView = $('landingView');
+        const uploadZone = $('uploadZone');
+        const fileInput = $('fileInput');
+        const editor = $('editor');
+        const headerResetBtn = $('headerResetBtn');
+        const previewCanvas = $('previewCanvas');
+        const downloadBtn = $('downloadBtn');
+        const downloadBtnDesktop = $('downloadBtnDesktop');
+        const copyBtn = $('copyBtn');
+        const copyBtnDesktop = $('copyBtnDesktop');
+        const mobileActions = $('mobileActions');
+        const borderSlider = $('borderSlider');
+        const densitySlider = $('densitySlider');
+        const holeSlider = $('holeSlider');
+        const borderColorPicker = $('borderColorPicker');
+        const borderVal = $('borderVal');
+        const densityVal = $('densityVal');
+        const holeVal = $('holeVal');
+        const sizeInfo = $('sizeInfo');
+        const toast = $('toast');
+        const loadingOverlay = $('loadingOverlay');
+        const colorSwatches = $('colorSwatches');
+        const patternBtns = $('patternBtns');
+        const patternSection = $('patternSection');
+        const patternHint = $('patternHint');
+        const scaleBtns = $('scaleBtns');
+        const presetsEl = $('presets');
+        const cropModal = $('cropModal');
+        const cropImage = $('cropImage');
+        const cropBtn = $('cropBtn');
+        const cropApplyBtn = $('cropApplyBtn');
+        const cropCancelBtn = $('cropCancelBtn');
+        const cropCloseBtn = $('cropCloseBtn');
+        const cropRatioBtns = $('cropRatioBtns');
+        const textSection = $('textSection');
+        const textControls = $('textControls');
+        const textEnabled = $('textEnabled');
+        const textInput = $('textInput');
+        const textFont = $('textFont');
+        const textSizeSlider = $('textSizeSlider');
+        const textSizeVal = $('textSizeVal');
+        const textColorPicker = $('textColorPicker');
+        const textXSlider = $('textXSlider');
+        const textYSlider = $('textYSlider');
+        const textXVal = $('textXVal');
+        const textYVal = $('textYVal');
+        const textBold = $('textBold');
+        const textShadow = $('textShadow');
+        const textPosBtns = $('textPosBtns');
+        const mobileToolsTabs = $('mobileToolsTabs');
+        const toolsAside = $('toolsAside');
+        const textTabDot = $('textTabDot');
+        const textDragLayer = $('textDragLayer');
+        const textDragHandle = $('textDragHandle');
+        const previewProtect = $('previewProtect');
+
+        let sourceImage = null;
+        let activeMobileTool = 'border';
+        let previewLayout = null;
+        let textDragPointerId = null;
+        let textDragPreviewFrame = null;
+        let originalImageSrc = null;
+        let pendingFileName = '';
+        let cropper = null;
+        let cropIsFirstLoad = false;
+        let toastTimer = null;
+        let previewFrame = null;
+        let lastOutputSize = { width: 0, height: 0 };
+        let exportScale = 1;
+        let borderColor = '#ffffff';
+        let bgPattern = 'solid';
+        let textColor = '#ffffff';
+        const patternTileCache = new Map();
+
+        function getPreviewLimits() {
+            const container = $('previewProtect')?.parentElement;
+            const containerW = container?.clientWidth || window.innerWidth;
+            const w = window.innerWidth;
+            let maxH;
+            if (w >= 1024) maxH = Math.min(520, window.innerHeight * 0.70);
+            else if (w >= 768) maxH = Math.min(480, window.innerHeight * 0.55);
+            else maxH = Math.min(360, window.innerHeight * 0.45);
+            return { maxW: Math.max(100, containerW), maxH };
+        }
+
+        function applyCanvasDisplaySize(canvas, outW, outH, limits) {
+            const scale = Math.min(1, limits.maxW / outW, limits.maxH / outH);
+            canvas.style.width = Math.round(outW * scale) + 'px';
+            canvas.style.height = Math.round(outH * scale) + 'px';
+            canvas.style.maxWidth = '100%';
+        }
+
+        function toggleClasses(el, classes, on) {
+            classes.forEach((c) => el.classList.toggle(c, on));
+        }
+
+        function setToggleActive(el, active, activeCls, inactiveCls) {
+            toggleClasses(el, activeCls, active);
+            toggleClasses(el, inactiveCls, !active);
+        }
+
+        function setEditorOpen(open) {
+            document.body.classList.toggle('editor-open', open);
+            landingView.classList.toggle('hidden', open);
+            editor.classList.toggle('hidden', !open);
+            headerResetBtn.classList.toggle('hidden', !open);
+            headerResetBtn.classList.toggle('flex', open);
+            mobileActions.classList.toggle('hidden', !open);
+            mobileActions.classList.toggle('flex', open);
+
+            const mobileToast = 'bottom-[calc(5.5rem+env(safe-area-inset-bottom))]';
+            const defaultToast = 'bottom-[max(1.5rem,env(safe-area-inset-bottom))]';
+            toast.classList.remove(mobileToast, defaultToast);
+            toast.classList.add(open && window.innerWidth < 1024 ? mobileToast : defaultToast);
+
+            if (open) {
+                activeMobileTool = 'border';
+                syncMobileToolPanels();
+            }
+        }
+
+        function setMobileToolTab(tab, scroll = false) {
+            activeMobileTool = tab;
+            syncMobileToolPanels();
+            if (scroll && toolsAside && window.innerWidth < 1024) {
+                toolsAside.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function syncMobileToolPanels() {
+            const isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+            mobileToolsTabs?.querySelectorAll('.tool-tab').forEach((btn) => {
+                const active = btn.dataset.toolTab === activeMobileTool;
+                btn.setAttribute('aria-selected', active ? 'true' : 'false');
+                if (isDesktop) {
+                    btn.classList.remove('border-stamp', 'bg-stamp/10', 'text-stamp', 'ring-1', 'ring-stamp/25');
+                } else {
+                    setToggleActive(btn, active, TOOL_TAB_ACTIVE, TOOL_TAB_INACTIVE);
+                }
+            });
+            document.querySelectorAll('[data-tool-panel]').forEach((panel) => {
+                if (isDesktop) {
+                    panel.classList.remove('hidden');
+                } else {
+                    panel.classList.toggle('hidden', panel.dataset.toolPanel !== activeMobileTool);
+                }
+            });
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.remove('translate-y-8', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add('translate-y-8', 'opacity-0');
+                toast.classList.remove('translate-y-0', 'opacity-100');
+            }, 2800);
+        }
+
+        function setLoading(on) {
+            loadingOverlay.classList.toggle('hidden', !on);
+            loadingOverlay.classList.toggle('flex', on);
+        }
+
+        function getOptions() {
+            return {
+                borderPercent: Number(borderSlider.value) / 100,
+                densityPercent: Number(densitySlider.value) / 100,
+                holeScale: Number(holeSlider.value) / 100,
+                borderColor,
+                bgPattern,
+                exportScale,
+                textOverlay: {
+                    enabled: textEnabled.checked,
+                    content: textInput.value,
+                    fontFamily: textFont.value,
+                    fontSize: Number(textSizeSlider.value),
+                    color: textColor,
+                    x: Number(textXSlider.value),
+                    y: Number(textYSlider.value),
+                    bold: textBold.checked,
+                    shadow: textShadow.checked,
+                },
+            };
+        }
+
+        function saveSettings() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                    border: borderSlider.value,
+                    density: densitySlider.value,
+                    hole: holeSlider.value,
+                    color: borderColor,
+                    pattern: bgPattern,
+                    scale: exportScale,
+                    textEnabled: textEnabled.checked,
+                    text: textInput.value,
+                    textFont: textFont.value,
+                    textSize: textSizeSlider.value,
+                    textColor,
+                    textX: textXSlider.value,
+                    textY: textYSlider.value,
+                    textBold: textBold.checked,
+                    textShadow: textShadow.checked,
+                }));
+            } catch (_) { /* ignore */ }
+        }
+
+        function loadSettings() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                const s = JSON.parse(raw);
+                if (s.border != null) borderSlider.value = s.border;
+                if (s.density != null) densitySlider.value = s.density;
+                if (s.hole != null) holeSlider.value = s.hole;
+                if (s.color) setBorderColor(s.color, false);
+                if (s.pattern) setBgPattern(s.pattern, false);
+                if (s.scale) setExportScale(Number(s.scale), false);
+                if (s.textEnabled != null) textEnabled.checked = s.textEnabled;
+                if (s.text != null) textInput.value = s.text;
+                if (s.textFont) textFont.value = s.textFont;
+                if (s.textSize != null) textSizeSlider.value = s.textSize;
+                if (s.textColor) setTextColor(s.textColor, false);
+                if (s.textX != null) textXSlider.value = s.textX;
+                if (s.textY != null) textYSlider.value = s.textY;
+                if (s.textBold != null) textBold.checked = s.textBold;
+                if (s.textShadow != null) textShadow.checked = s.textShadow;
+                updateTextControlsState();
+                updateTextLabels();
+                syncTextPosHighlight();
+            } catch (_) { /* ignore */ }
+        }
+
+        function setTextColor(color, save = true) {
+            textColor = color;
+            textColorPicker.value = color;
+            textSection.querySelectorAll('.text-color-swatch').forEach((el) => {
+                const active = el.dataset.color.toLowerCase() === color.toLowerCase();
+                setToggleActive(el, active, SWATCH_ACTIVE, SWATCH_INACTIVE);
+            });
+            if (save) { saveSettings(); schedulePreview(); }
+        }
+
+        function updateTextLabels() {
+            textSizeVal.textContent = textSizeSlider.value + '%';
+            textXVal.textContent = textXSlider.value + '%';
+            textYVal.textContent = textYSlider.value + '%';
+        }
+
+        function isTextDragActive() {
+            return textEnabled.checked && textInput.value.trim().length > 0;
+        }
+
+        function clampTextPercent(value) {
+            return Math.round(Math.max(5, Math.min(95, value)));
+        }
+
+        function setTextPosition(x, y, { save = true, livePreview = true } = {}) {
+            textXSlider.value = clampTextPercent(x);
+            textYSlider.value = clampTextPercent(y);
+            updateTextLabels();
+            syncTextPosHighlight();
+            updateTextDragUI();
+            if (livePreview) schedulePreview();
+            if (save) saveSettings();
+        }
+
+        function pointerToTextPercent(clientX, clientY) {
+            const rect = textDragLayer.getBoundingClientRect();
+            if (!rect.width || !rect.height) {
+                return { x: Number(textXSlider.value), y: Number(textYSlider.value) };
+            }
+            return {
+                x: ((clientX - rect.left) / rect.width) * 100,
+                y: ((clientY - rect.top) / rect.height) * 100,
+            };
+        }
+
+        function setTextPositionFromPointer(clientX, clientY, save = false) {
+            const pos = pointerToTextPercent(clientX, clientY);
+            textXSlider.value = clampTextPercent(pos.x);
+            textYSlider.value = clampTextPercent(pos.y);
+            updateTextLabels();
+            syncTextPosHighlight();
+            updateTextDragUI();
+            if (save) saveSettings();
+            cancelAnimationFrame(textDragPreviewFrame);
+            textDragPreviewFrame = requestAnimationFrame(() => schedulePreview());
+        }
+
+        function updateTextDragUI() {
+            const active = isTextDragActive() && previewLayout && sourceImage;
+            textDragLayer.classList.toggle('hidden', !active);
+            if (!active) return;
+
+            const canvas = previewCanvas;
+            if (!canvas.width || !canvas.height) return;
+
+            const canvasRect = canvas.getBoundingClientRect();
+            const protectRect = previewProtect.getBoundingClientRect();
+            const scaleX = canvas.clientWidth / canvas.width;
+            const scaleY = canvas.clientHeight / canvas.height;
+            const imgLeft = (canvasRect.left - protectRect.left) + previewLayout.offsetX * scaleX;
+            const imgTop = (canvasRect.top - protectRect.top) + previewLayout.offsetY * scaleY;
+            const imgW = previewLayout.imgW * scaleX;
+            const imgH = previewLayout.imgH * scaleY;
+
+            textDragLayer.style.left = imgLeft + 'px';
+            textDragLayer.style.top = imgTop + 'px';
+            textDragLayer.style.width = imgW + 'px';
+            textDragLayer.style.height = imgH + 'px';
+
+            const handleX = imgW * (Number(textXSlider.value) / 100);
+            const handleY = imgH * (Number(textYSlider.value) / 100);
+            textDragHandle.style.left = handleX + 'px';
+            textDragHandle.style.top = handleY + 'px';
+        }
+
+        function endTextDrag(e) {
+            if (textDragPointerId === null || e.pointerId !== textDragPointerId) return;
+            textDragLayer.releasePointerCapture(textDragPointerId);
+            textDragPointerId = null;
+            textDragLayer.classList.remove('dragging');
+            saveSettings();
+            schedulePreview();
+        }
+
+        function updateTextControlsState() {
+            const on = textEnabled.checked;
+            textControls.classList.toggle('opacity-40', !on);
+            textControls.classList.toggle('pointer-events-none', !on);
+            textTabDot?.classList.toggle('hidden', !on || !textInput.value.trim());
+            updateTextDragUI();
+        }
+
+        function syncTextPosHighlight() {
+            const y = Number(textYSlider.value);
+            textPosBtns?.querySelectorAll('.text-pos-btn').forEach((btn) => {
+                const active = Number(btn.dataset.y) === y;
+                setToggleActive(btn, active, CROP_RATIO_ACTIVE, CROP_RATIO_INACTIVE);
+            });
+        }
+
+        async function loadTextFontAndPreview() {
+            const family = textFont.value;
+            try {
+                await document.fonts.load(`700 48px "${family}"`);
+                await document.fonts.load(`400 48px "${family}"`);
+            } catch (_) { /* ignore */ }
+            schedulePreview();
+        }
+
+        function setBorderColor(color, save = true) {
+            borderColor = color;
+            borderColorPicker.value = color;
+            patternTileCache.clear();
+            colorSwatches.querySelectorAll('.swatch').forEach((el) => {
+                const active = el.dataset.color.toLowerCase() === color.toLowerCase();
+                setToggleActive(el, active, SWATCH_ACTIVE, SWATCH_INACTIVE);
+            });
+            if (save) { saveSettings(); schedulePreview(); }
+        }
+
+        function setBgPattern(pattern, save = true) {
+            bgPattern = pattern;
+            patternBtns.querySelectorAll('.pattern-btn').forEach((el) => {
+                const active = el.dataset.pattern === pattern;
+                setToggleActive(el, active, PATTERN_ACTIVE, PATTERN_INACTIVE);
+                const label = el.querySelector('.pattern-label');
+                if (label) setToggleActive(label, active, PATTERN_LABEL_ACTIVE, PATTERN_LABEL_INACTIVE);
+            });
+            if (save) { saveSettings(); schedulePreview(); }
+        }
+
+        function updatePatternSectionState() {
+            const noBorder = Number(borderSlider.value) === 0;
+            patternSection.classList.toggle('opacity-40', noBorder);
+            patternSection.classList.toggle('pointer-events-none', noBorder);
+            patternHint.classList.toggle('hidden', !noBorder);
+        }
+
+        function setExportScale(scale, save = true) {
+            exportScale = scale;
+            scaleBtns?.querySelectorAll('.scale-btn').forEach((el) => {
+                setToggleActive(el, Number(el.dataset.scale) === scale, SCALE_ACTIVE, SCALE_INACTIVE);
+            });
+            if (save) { saveSettings(); schedulePreview(); }
+        }
+
+        function setPresetActive(btn, active) {
+            setToggleActive(btn, active, PRESET_ACTIVE, PRESET_INACTIVE);
+            const label = btn.querySelector('.preset-label');
+            const icon = btn.querySelector('.preset-icon');
+            if (label) setToggleActive(label, active, PRESET_TEXT_ACTIVE, PRESET_TEXT_INACTIVE);
+            if (icon) setToggleActive(icon, active, PRESET_ICON_ACTIVE, PRESET_ICON_INACTIVE);
+        }
+
+        function clearPresetActive() {
+            presetsEl?.querySelectorAll('.preset-btn').forEach((b) => setPresetActive(b, false));
+        }
+
+        function applyPreset(name) {
+            const p = PRESETS[name];
+            if (!p) return;
+            borderSlider.value = p.border;
+            densitySlider.value = p.density;
+            holeSlider.value = p.hole;
+            setBorderColor(p.color, false);
+            setBgPattern(p.pattern || 'solid', false);
+            setExportScale(p.scale, false);
+            presetsEl?.querySelectorAll('.preset-btn').forEach((b) => {
+                setPresetActive(b, b.dataset.preset === name);
+            });
+            saveSettings();
+            schedulePreview();
+        }
+
+        function matchesPreset(name) {
+            const p = PRESETS[name];
+            return Number(borderSlider.value) === p.border
+                && Number(densitySlider.value) === p.density
+                && Number(holeSlider.value) === p.hole
+                && borderColor.toLowerCase() === p.color.toLowerCase()
+                && bgPattern === (p.pattern || 'solid')
+                && exportScale === p.scale;
+        }
+
+        function syncPresetHighlight() {
+            if (!presetsEl) return;
+            let matched = false;
+            for (const name of Object.keys(PRESETS)) {
+                if (matchesPreset(name)) {
+                    presetsEl.querySelectorAll('.preset-btn').forEach((b) => {
+                        setPresetActive(b, b.dataset.preset === name);
+                    });
+                    matched = true;
+                    break;
+                }
+            }
+            if (!matched) clearPresetActive();
+        }
+
+        function hexToRgb(hex) {
+            const h = hex.replace('#', '');
+            const full = h.length === 3 ? h.split('').map((c) => c + c).join('') : h;
+            const n = parseInt(full, 16);
+            return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+        }
+
+        function rgbToHex(r, g, b) {
+            return '#' + [r, g, b].map((v) => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
+        }
+
+        function shadeColor(hex, amount) {
+            const { r, g, b } = hexToRgb(hex);
+            const t = amount < 0 ? 0 : 255;
+            const p = Math.abs(amount);
+            return rgbToHex(r + (t - r) * p, g + (t - g) * p, b + (t - b) * p);
+        }
+
+        function createPatternTile(type, baseColor, size) {
+            const key = type + '|' + baseColor + '|' + size;
+            if (patternTileCache.has(key)) return patternTileCache.get(key);
+
+            const tile = document.createElement('canvas');
+            tile.width = size;
+            tile.height = size;
+            const t = tile.getContext('2d');
+            const dark = shadeColor(baseColor, -0.14);
+            const light = shadeColor(baseColor, 0.12);
+            const mid = shadeColor(baseColor, -0.07);
+
+            t.fillStyle = baseColor;
+            t.fillRect(0, 0, size, size);
+
+            switch (type) {
+                case 'dots':
+                    t.fillStyle = mid;
+                    for (let y = size / 4; y < size; y += size / 2) {
+                        for (let x = size / 4; x < size; x += size / 2) {
+                            t.beginPath();
+                            t.arc(x, y, size * 0.09, 0, Math.PI * 2);
+                            t.fill();
+                        }
+                    }
+                    break;
+                case 'stripes':
+                    t.strokeStyle = mid;
+                    t.lineWidth = Math.max(1, size * 0.1);
+                    for (let i = -size; i < size * 2; i += size * 0.35) {
+                        t.beginPath();
+                        t.moveTo(i, 0);
+                        t.lineTo(i + size, size);
+                        t.stroke();
+                    }
+                    break;
+                case 'grid':
+                    t.strokeStyle = mid;
+                    t.lineWidth = Math.max(1, size * 0.04);
+                    const step = size / 4;
+                    for (let i = 0; i <= size; i += step) {
+                        t.beginPath(); t.moveTo(i, 0); t.lineTo(i, size); t.stroke();
+                        t.beginPath(); t.moveTo(0, i); t.lineTo(size, i); t.stroke();
+                    }
+                    break;
+                case 'crosshatch':
+                    t.strokeStyle = mid;
+                    t.lineWidth = Math.max(1, size * 0.05);
+                    for (let i = -size; i < size * 2; i += size * 0.35) {
+                        t.beginPath(); t.moveTo(i, 0); t.lineTo(i + size, size); t.stroke();
+                        t.beginPath(); t.moveTo(i, size); t.lineTo(i + size, 0); t.stroke();
+                    }
+                    break;
+                case 'waves':
+                    t.strokeStyle = mid;
+                    t.lineWidth = Math.max(1, size * 0.07);
+                    for (let row = 0; row < 3; row++) {
+                        const baseY = (row + 0.5) * size / 3;
+                        t.beginPath();
+                        for (let x = 0; x <= size; x++) {
+                            const y = baseY + Math.sin((x / size) * Math.PI * 2) * size * 0.12;
+                            x === 0 ? t.moveTo(x, y) : t.lineTo(x, y);
+                        }
+                        t.stroke();
+                    }
+                    break;
+                case 'diamond':
+                    t.strokeStyle = mid;
+                    t.lineWidth = Math.max(1, size * 0.06);
+                    const h = size / 2;
+                    t.beginPath();
+                    t.moveTo(h, 0); t.lineTo(size, h); t.lineTo(h, size); t.lineTo(0, h);
+                    t.closePath();
+                    t.stroke();
+                    break;
+                case 'gradient': {
+                    const g = t.createLinearGradient(0, 0, size, size);
+                    g.addColorStop(0, light);
+                    g.addColorStop(0.5, baseColor);
+                    g.addColorStop(1, shadeColor(baseColor, -0.1));
+                    t.fillStyle = g;
+                    t.fillRect(0, 0, size, size);
+                    break;
+                }
+                case 'linen':
+                    t.strokeStyle = shadeColor(baseColor, -0.08);
+                    t.lineWidth = Math.max(1, size * 0.03);
+                    for (let i = 0; i <= size; i += size / 5) {
+                        t.beginPath(); t.moveTo(0, i); t.lineTo(size, i); t.stroke();
+                        t.beginPath(); t.moveTo(i, 0); t.lineTo(i, size); t.stroke();
+                    }
+                    break;
+                case 'circles':
+                    t.strokeStyle = mid;
+                    t.lineWidth = Math.max(1, size * 0.05);
+                    for (let y = size / 4; y < size; y += size / 2) {
+                        for (let x = size / 4; x < size; x += size / 2) {
+                            t.beginPath();
+                            t.arc(x, y, size * 0.18, 0, Math.PI * 2);
+                            t.stroke();
+                        }
+                    }
+                    break;
+            }
+
+            patternTileCache.set(key, tile);
+            return tile;
+        }
+
+        function fillBorderBackground(ctx, w, h, color, pattern) {
+            if (!pattern || pattern === 'solid') {
+                ctx.fillStyle = color;
+                ctx.fillRect(0, 0, w, h);
+                return;
+            }
+            const tileSize = Math.max(16, Math.round(Math.max(w, h) * 0.028));
+            const tile = createPatternTile(pattern, color, tileSize);
+            ctx.fillStyle = ctx.createPattern(tile, 'repeat');
+            ctx.fillRect(0, 0, w, h);
+        }
+
+        function drawTextOverlay(ctx, offsetX, offsetY, imgW, imgH, textOpts) {
+            if (!textOpts?.enabled) return;
+            const content = (textOpts.content || '').trim();
+            if (!content) return;
+
+            const fontSize = Math.max(10, Math.min(imgW, imgH) * (textOpts.fontSize / 100));
+            const weight = textOpts.bold ? '700' : '400';
+            const family = textOpts.fontFamily || 'Outfit';
+            const x = offsetX + imgW * (textOpts.x / 100);
+            const y = offsetY + imgH * (textOpts.y / 100);
+
+            ctx.save();
+            ctx.font = `${weight} ${fontSize}px "${family}", sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            if (textOpts.shadow) {
+                ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                const off = Math.max(1, fontSize * 0.05);
+                ctx.fillText(content, x + off, y + off);
+            }
+
+            ctx.fillStyle = textOpts.color || '#ffffff';
+            ctx.fillText(content, x, y);
+            ctx.restore();
+        }
+
+        function drawCanvasWatermark(ctx, w, h) {
+            const fontSize = Math.max(10, Math.round(Math.max(w, h) * 0.03));
+            const stepX = fontSize * 11;
+            const stepY = fontSize * 8;
+
+            ctx.save();
+            ctx.globalAlpha = 0.14;
+            ctx.fillStyle = '#141210';
+            ctx.font = `600 ${fontSize}px Outfit, Arial, sans-serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.translate(w / 2, h / 2);
+            ctx.rotate(-Math.PI / 6);
+            ctx.translate(-w / 2, -h / 2);
+
+            let row = 0;
+            for (let y = -h; y < h * 2; y += stepY, row++) {
+                const offsetX = (row % 2) * (stepX / 2);
+                for (let x = -w + offsetX; x < w * 2; x += stepX) {
+                    ctx.fillText(WATERMARK_TEXT, x, y);
+                }
+            }
+            ctx.restore();
+        }
+
+        function calculateDimensions(img, options) {
+            const scale = options.exportScale || 1;
+            const imgW = Math.round(img.width * scale);
+            const imgH = Math.round(img.height * scale);
+            const borderSize = Math.max(imgW, imgH) * options.borderPercent;
+            const baseWidth = imgW + borderSize * 2;
+            const baseHeight = imgH + borderSize * 2;
+            const targetSpacing = Math.max(imgW, imgH) * options.densityPercent;
+            const xCount = Math.max(2, Math.round(baseWidth / targetSpacing));
+            const yCount = Math.max(2, Math.round(baseHeight / targetSpacing));
+            return {
+                width: Math.round(xCount * (baseWidth / xCount)),
+                height: Math.round(yCount * (baseHeight / yCount)),
+                imgW, imgH
+            };
+        }
+
+        function renderStamp(targetCanvas, img, options, maxDisplaySize) {
+            const dims = calculateDimensions(img, options);
+            const { width: outW, height: outH, imgW, imgH } = dims;
+
+            const borderSize = Math.max(imgW, imgH) * options.borderPercent;
+            const baseWidth = imgW + borderSize * 2;
+            const baseHeight = imgH + borderSize * 2;
+            const targetSpacing = Math.max(imgW, imgH) * options.densityPercent;
+            const holeRadius = targetSpacing * 0.28 * (options.holeScale || 1);
+
+            const xCount = Math.max(2, Math.round(baseWidth / targetSpacing));
+            const yCount = Math.max(2, Math.round(baseHeight / targetSpacing));
+            const xSpacing = outW / xCount;
+            const ySpacing = outH / yCount;
+
+            targetCanvas.width = outW;
+            targetCanvas.height = outH;
+
+            const ctx = targetCanvas.getContext('2d', { alpha: true });
+            ctx.clearRect(0, 0, outW, outH);
+
+            if (options.borderPercent > 0) {
+                fillBorderBackground(ctx, outW, outH, options.borderColor || '#ffffff', options.bgPattern || 'solid');
+            }
+
+            const offsetX = (outW - imgW) / 2;
+            const offsetY = (outH - imgH) / 2;
+            ctx.imageSmoothingEnabled = true;
+            ctx.imageSmoothingQuality = 'high';
+            ctx.drawImage(img, offsetX, offsetY, imgW, imgH);
+
+            if (options.textOverlay) {
+                drawTextOverlay(ctx, offsetX, offsetY, imgW, imgH, options.textOverlay);
+            }
+
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.fillStyle = '#000';
+
+            for (let i = 0; i <= xCount; i++) {
+                const x = i * xSpacing;
+                ctx.beginPath();
+                ctx.arc(x, 0, holeRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(x, outH, holeRadius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            for (let j = 1; j < yCount; j++) {
+                const y = j * ySpacing;
+                ctx.beginPath();
+                ctx.arc(0, y, holeRadius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(outW, y, holeRadius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.globalCompositeOperation = 'source-over';
+
+            if (options.watermark) {
+                drawCanvasWatermark(ctx, outW, outH);
+            }
+
+            if (maxDisplaySize) {
+                const limits = typeof maxDisplaySize === 'object'
+                    ? maxDisplaySize
+                    : { maxW: maxDisplaySize, maxH: maxDisplaySize };
+                applyCanvasDisplaySize(targetCanvas, outW, outH, limits);
+            } else {
+                targetCanvas.style.width = '';
+                targetCanvas.style.height = '';
+                targetCanvas.style.maxWidth = '';
+            }
+
+            return { width: outW, height: outH, imgW, imgH, offsetX, offsetY };
+        }
+
+        function updateLabels() {
+            borderVal.textContent = Number(borderSlider.value) === 0 ? 'Байхгүй' : borderSlider.value + '%';
+            densityVal.textContent = densitySlider.value + '%';
+            holeVal.textContent = holeSlider.value + '%';
+            updatePatternSectionState();
+            if (sourceImage && lastOutputSize.width) {
+                sizeInfo.textContent = sourceImage.width + '×' + sourceImage.height + ' → ' + lastOutputSize.width + '×' + lastOutputSize.height;
+            }
+        }
+
+        function updatePreview() {
+            if (!sourceImage) return;
+            const opts = getOptions();
+            const draw = () => {
+                previewLayout = renderStamp(previewCanvas, sourceImage, { ...opts, exportScale: 1, watermark: true }, getPreviewLimits());
+                lastOutputSize = calculateDimensions(sourceImage, opts);
+                updateLabels();
+                syncPresetHighlight();
+                updateTextDragUI();
+            };
+            const t = opts.textOverlay;
+            if (t?.enabled && t.content?.trim()) {
+                const weight = t.bold ? '700' : '400';
+                document.fonts.load(`${weight} 48px "${t.fontFamily}"`).then(draw).catch(draw);
+            } else {
+                draw();
+            }
+        }
+
+        function schedulePreview() {
+            cancelAnimationFrame(previewFrame);
+            previewFrame = requestAnimationFrame(updatePreview);
+        }
+
+        function onControlChange() {
+            saveSettings();
+            schedulePreview();
+        }
+
+        function destroyCropper() {
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+        }
+
+        function setCropRatioActive(btn) {
+            cropRatioBtns?.querySelectorAll('.crop-ratio-btn').forEach((el) => {
+                const active = el === btn;
+                setToggleActive(el, active, CROP_RATIO_ACTIVE, CROP_RATIO_INACTIVE);
+            });
+        }
+
+        function initCropper() {
+            destroyCropper();
+            if (typeof Cropper === 'undefined') {
+                showToast('Crop хэрэгсэл ачаалагдаагүй байна');
+                return;
+            }
+            cropper = new Cropper(cropImage, {
+                viewMode: 1,
+                dragMode: 'move',
+                aspectRatio: NaN,
+                autoCropArea: 0.92,
+                responsive: true,
+                background: false,
+                guides: true,
+                center: true,
+                highlight: false,
+                movable: true,
+                zoomable: true,
+                scalable: false,
+                rotatable: false,
+            });
+            const firstBtn = cropRatioBtns?.querySelector('[data-ratio="free"]');
+            if (firstBtn) setCropRatioActive(firstBtn);
+        }
+
+        function openCropModal(src, isFirstLoad = false) {
+            cropIsFirstLoad = isFirstLoad;
+            cropModal.classList.remove('hidden');
+            cropModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+            destroyCropper();
+            cropImage.onload = () => initCropper();
+            cropImage.src = src;
+            if (cropImage.complete && cropImage.naturalWidth) initCropper();
+        }
+
+        function closeCropModal(cancelled = false) {
+            destroyCropper();
+            cropModal.classList.add('hidden');
+            cropModal.classList.remove('flex');
+            document.body.style.overflow = '';
+            cropImage.removeAttribute('src');
+            if (cancelled && cropIsFirstLoad) {
+                fileInput.value = '';
+            }
+            cropIsFirstLoad = false;
+        }
+
+        function applyCrop() {
+            if (!cropper) return;
+            const canvas = cropper.getCroppedCanvas({
+                maxWidth: 4096,
+                maxHeight: 4096,
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high',
+            });
+            if (!canvas) {
+                showToast('Таслахад алдаа гарлаа');
+                return;
+            }
+            setLoading(true);
+            const wasFirstLoad = cropIsFirstLoad;
+            const fileName = pendingFileName;
+            const img = new Image();
+            img.onload = () => {
+                sourceImage = img;
+                closeCropModal(false);
+                setEditorOpen(true);
+                setLoading(false);
+                schedulePreview();
+                showToast(wasFirstLoad && fileName ? fileName + ' бэлэн' : 'Зураг тасагдлаа');
+            };
+            img.onerror = () => {
+                setLoading(false);
+                showToast('Зургийг уншиж чадсангүй');
+            };
+            img.src = canvas.toDataURL('image/png');
+        }
+
+        function loadImageFromSrc(src, name) {
+            originalImageSrc = src;
+            pendingFileName = name || '';
+            openCropModal(src, true);
+        }
+
+        function loadImage(file) {
+            if (!file.type.startsWith('image/')) {
+                showToast('Зөвхөн зураг файл оруулна уу');
+                return;
+            }
+            if (file.size > MAX_FILE_SIZE) {
+                showToast('Файл хэт том байна (15 MB хязгаар)');
+                return;
+            }
+            const reader = new FileReader();
+            reader.onload = (e) => loadImageFromSrc(e.target.result, file.name);
+            reader.onerror = () => showToast('Файлыг уншиж чадсангүй');
+            reader.readAsDataURL(file);
+        }
+
+        function reset() {
+            sourceImage = null;
+            originalImageSrc = null;
+            pendingFileName = '';
+            destroyCropper();
+            fileInput.value = '';
+            textEnabled.checked = false;
+            textInput.value = '';
+            textFont.value = 'Outfit';
+            textSizeSlider.value = 8;
+            textXSlider.value = 50;
+            textYSlider.value = 86;
+            textBold.checked = false;
+            textShadow.checked = true;
+            setTextColor('#ffffff', false);
+            updateTextControlsState();
+            updateTextLabels();
+            syncTextPosHighlight();
+            setEditorOpen(false);
+            sizeInfo.textContent = '';
+        }
+
+        async function buildExportCanvasAsync() {
+            const opts = getOptions();
+            const t = opts.textOverlay;
+            if (t?.enabled && t.content?.trim()) {
+                const weight = t.bold ? '700' : '400';
+                try {
+                    await document.fonts.load(`${weight} 48px "${t.fontFamily}"`);
+                } catch (_) { /* ignore */ }
+            }
+            const canvas = document.createElement('canvas');
+            renderStamp(canvas, sourceImage, opts);
+            return canvas;
+        }
+
+        function setDownloadLoading(loading) {
+            downloadBtn.disabled = loading;
+            downloadBtnDesktop.disabled = loading;
+            if (loading) {
+                downloadBtn.innerHTML = DL_LOADING_HTML_MOBILE;
+                downloadBtnDesktop.innerHTML = DL_LOADING_HTML;
+            } else {
+                downloadBtn.innerHTML = DL_BTN_HTML_MOBILE;
+                downloadBtnDesktop.innerHTML = DL_BTN_HTML;
+            }
+        }
+
+        function download() {
+            if (!sourceImage) return;
+            setDownloadLoading(true);
+
+            requestAnimationFrame(async () => {
+                const canvas = await buildExportCanvasAsync();
+                canvas.toBlob((blob) => {
+                    setDownloadLoading(false);
+                    if (!blob) { showToast('Татаж авахад алдаа гарлаа'); return; }
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.download = 'stamp-' + Date.now() + '.png';
+                    link.href = url;
+                    link.click();
+                    URL.revokeObjectURL(url);
+                    showToast('Амжилттай татагдлаа!');
+                }, 'image/png');
+            });
+        }
+
+        async function copyToClipboard() {
+            if (!sourceImage) return;
+            copyBtn.disabled = true;
+            copyBtnDesktop.disabled = true;
+
+            try {
+                const canvas = await buildExportCanvasAsync();
+                const blob = await new Promise((res, rej) =>
+                    canvas.toBlob((b) => b ? res(b) : rej(), 'image/png')
+                );
+                await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                showToast('Clipboard-д хуулагдлаа!');
+            } catch {
+                showToast('Хуулах боломжгүй — татаж аваарай');
+            } finally {
+                copyBtn.disabled = false;
+                copyBtnDesktop.disabled = false;
+            }
+        }
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+        uploadZone.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); fileInput.click(); }
+        });
+
+        ['dragenter', 'dragover'].forEach((evt) => {
+            uploadZone.addEventListener(evt, (e) => {
+                e.preventDefault();
+                toggleClasses(uploadZone, DRAGOVER, true);
+            });
+        });
+
+        ['dragleave', 'drop'].forEach((evt) => {
+            uploadZone.addEventListener(evt, (e) => {
+                e.preventDefault();
+                toggleClasses(uploadZone, DRAGOVER, false);
+            });
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            const file = e.dataTransfer.files[0];
+            if (file) loadImage(file);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) loadImage(file);
+        });
+
+        document.addEventListener('paste', (e) => {
+            const items = e.clipboardData?.items;
+            if (!items) return;
+            for (const item of items) {
+                if (item.type.startsWith('image/')) {
+                    e.preventDefault();
+                    const file = item.getAsFile();
+                    if (file) loadImage(file);
+                    return;
+                }
+            }
+        });
+
+        borderSlider.addEventListener('input', onControlChange);
+        densitySlider.addEventListener('input', onControlChange);
+        holeSlider.addEventListener('input', onControlChange);
+
+        textEnabled.addEventListener('change', () => {
+            updateTextControlsState();
+            if (textEnabled.checked && window.innerWidth < 1024) setMobileToolTab('text');
+            onControlChange();
+        });
+        textInput.addEventListener('input', () => {
+            if (textInput.value.trim() && !textEnabled.checked) {
+                textEnabled.checked = true;
+                updateTextControlsState();
+                if (window.innerWidth < 1024) setMobileToolTab('text');
+            } else {
+                updateTextControlsState();
+            }
+            onControlChange();
+        });
+        textFont.addEventListener('change', () => {
+            saveSettings();
+            loadTextFontAndPreview();
+        });
+        textSizeSlider.addEventListener('input', () => {
+            updateTextLabels();
+            onControlChange();
+        });
+        textXSlider.addEventListener('input', () => {
+            updateTextLabels();
+            syncTextPosHighlight();
+            updateTextDragUI();
+            onControlChange();
+        });
+        textYSlider.addEventListener('input', () => {
+            updateTextLabels();
+            syncTextPosHighlight();
+            updateTextDragUI();
+            onControlChange();
+        });
+        textBold.addEventListener('change', onControlChange);
+        textShadow.addEventListener('change', onControlChange);
+        textColorPicker.addEventListener('input', (e) => setTextColor(e.target.value));
+        textSection.addEventListener('click', (e) => {
+            const swatch = e.target.closest('.text-color-swatch');
+            if (!swatch) return;
+            setTextColor(swatch.dataset.color);
+        });
+        textPosBtns?.addEventListener('click', (e) => {
+            const btn = e.target.closest('.text-pos-btn');
+            if (!btn) return;
+            textYSlider.value = btn.dataset.y;
+            updateTextLabels();
+            syncTextPosHighlight();
+            updateTextDragUI();
+            onControlChange();
+        });
+
+        mobileToolsTabs?.addEventListener('click', (e) => {
+            const btn = e.target.closest('.tool-tab');
+            if (!btn) return;
+            setMobileToolTab(btn.dataset.toolTab);
+        });
+
+        textDragLayer.addEventListener('pointerdown', (e) => {
+            if (!isTextDragActive()) return;
+            e.preventDefault();
+            textDragPointerId = e.pointerId;
+            textDragLayer.setPointerCapture(e.pointerId);
+            textDragLayer.classList.add('dragging');
+            setTextPositionFromPointer(e.clientX, e.clientY, false);
+        });
+        textDragLayer.addEventListener('pointermove', (e) => {
+            if (textDragPointerId !== e.pointerId) return;
+            setTextPositionFromPointer(e.clientX, e.clientY, false);
+        });
+        textDragLayer.addEventListener('pointerup', endTextDrag);
+        textDragLayer.addEventListener('pointercancel', endTextDrag);
+
+        borderColorPicker.addEventListener('input', (e) => {
+            setBorderColor(e.target.value);
+            clearPresetActive();
+        });
+
+        colorSwatches.addEventListener('click', (e) => {
+            const swatch = e.target.closest('.swatch');
+            if (!swatch) return;
+            setBorderColor(swatch.dataset.color);
+            syncPresetHighlight();
+        });
+
+        patternBtns.addEventListener('click', (e) => {
+            const btn = e.target.closest('.pattern-btn');
+            if (!btn || Number(borderSlider.value) === 0) return;
+            setBgPattern(btn.dataset.pattern);
+            clearPresetActive();
+        });
+
+        scaleBtns?.addEventListener('click', (e) => {
+            const btn = e.target.closest('.scale-btn');
+            if (!btn) return;
+            setExportScale(Number(btn.dataset.scale));
+        });
+
+        presetsEl?.addEventListener('click', (e) => {
+            const btn = e.target.closest('.preset-btn');
+            if (!btn) return;
+            applyPreset(btn.dataset.preset);
+        });
+
+        cropBtn.addEventListener('click', () => {
+            if (!originalImageSrc) return;
+            openCropModal(originalImageSrc, false);
+        });
+        cropApplyBtn.addEventListener('click', applyCrop);
+        cropCancelBtn.addEventListener('click', () => closeCropModal(true));
+        cropCloseBtn.addEventListener('click', () => closeCropModal(true));
+        cropModal.addEventListener('click', (e) => {
+            if (e.target === cropModal) closeCropModal(true);
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !cropModal.classList.contains('hidden')) closeCropModal(true);
+        });
+        cropRatioBtns?.addEventListener('click', (e) => {
+            const btn = e.target.closest('.crop-ratio-btn');
+            if (!btn || !cropper) return;
+            setCropRatioActive(btn);
+            const ratio = btn.dataset.ratio;
+            cropper.setAspectRatio(ratio === 'free' ? NaN : Number(ratio));
+        });
+
+        downloadBtn.addEventListener('click', download);
+        downloadBtnDesktop.addEventListener('click', download);
+        copyBtn.addEventListener('click', copyToClipboard);
+        copyBtnDesktop.addEventListener('click', copyToClipboard);
+        headerResetBtn.addEventListener('click', reset);
+
+        document.addEventListener('keydown', (e) => {
+            if (!sourceImage) return;
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); download(); }
+        });
+
+        loadSettings();
+        updateLabels();
+        updateTextLabels();
+        syncTextPosHighlight();
+        syncMobileToolPanels();
+
+        window.addEventListener('resize', () => {
+            syncMobileToolPanels();
+            if (sourceImage) schedulePreview();
+        }, { passive: true });
+
+        if (typeof ResizeObserver !== 'undefined') {
+            const previewWrap = $('previewProtect')?.parentElement;
+            if (previewWrap) {
+                new ResizeObserver(() => {
+                    if (sourceImage) schedulePreview();
+                }).observe(previewWrap);
+            }
+        }
+
+        (function () {
+            const GUARD = '.protected-wrap, #previewProtect';
+
+            function isProtected(target) {
+                if (target?.closest?.('#textDragLayer')) return false;
+                return target && target.closest && target.closest(GUARD);
+            }
+
+            document.addEventListener('contextmenu', (e) => {
+                if (isProtected(e.target)) e.preventDefault();
+            });
+
+            document.addEventListener('dragstart', (e) => {
+                if (isProtected(e.target)) e.preventDefault();
+            });
+
+            document.addEventListener('copy', (e) => {
+                if (isProtected(e.target)) e.preventDefault();
+            });
+
+            document.addEventListener('cut', (e) => {
+                if (isProtected(e.target)) e.preventDefault();
+            });
+
+            document.addEventListener('selectstart', (e) => {
+                if (isProtected(e.target)) e.preventDefault();
+            });
+        })();
+
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (sourceImage) { setEditorOpen(true); schedulePreview(); }
+            }, 150);
+        }, { passive: true });
+    </script>
+</body>
+</html>
