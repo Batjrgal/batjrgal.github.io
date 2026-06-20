@@ -1,0 +1,1484 @@
+<!doctype html>
+<html lang="mn" class="h-full">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no"
+    />
+
+    <title>Шуудангийн Марк Үүсгэгч</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Noto+Sans+Mongolian&family=Roboto:wght@400;700&family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&family=Merriweather:wght@400;700&family=Bebas+Neue&family=Oswald:wght@400;600&family=Pacifico&family=Dancing+Script&family=Caveat:wght@400;700&family=Lobster&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: { sans: ["Outfit", "system-ui", "sans-serif"] },
+            colors: {
+              ink: {
+                DEFAULT: "#141210",
+                50: "#1c1a17",
+                100: "#252220",
+                200: "#3d3835",
+                300: "#5c5650",
+              },
+              stamp: { DEFAULT: "#e85d4c", light: "#f4845f", dim: "#c94a3a" },
+              paper: { DEFAULT: "#f5f0e8", muted: "#e8e0d4" },
+            },
+            animation: {
+              "fade-up": "fadeUp 0.45s cubic-bezier(0.16,1,0.3,1)",
+              "fade-in": "fadeIn 0.3s ease",
+              float: "float 6s ease-in-out infinite",
+              float2: "float2 7s ease-in-out infinite 0.5s",
+              float3: "float3 5.5s ease-in-out infinite 1s",
+            },
+            keyframes: {
+              fadeUp: {
+                "0%": { opacity: "0", transform: "translateY(16px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              fadeIn: { "0%": { opacity: "0" }, "100%": { opacity: "1" } },
+              float: {
+                "0%, 100%": { transform: "translateY(0) rotate(-3deg)" },
+                "50%": { transform: "translateY(-10px) rotate(3deg)" },
+              },
+              float2: {
+                "0%, 100%": { transform: "translateY(0) rotate(4deg)" },
+                "50%": { transform: "translateY(-8px) rotate(-2deg)" },
+              },
+              float3: {
+                "0%, 100%": { transform: "translateY(0) rotate(-5deg)" },
+                "50%": { transform: "translateY(-12px) rotate(2deg)" },
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      @font-face {
+        font-family: "Just Like Heaven";
+        src: url("JustLikeHeavenRegular.woff") format("woff");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+    </style>
+    <style type="text/tailwindcss">
+      @layer utilities {
+        .bg-dots {
+          background-image: radial-gradient(
+            circle,
+            rgba(255, 255, 255, 0.04) 1px,
+            transparent 1px
+          );
+          background-size: 20px 20px;
+        }
+        .bg-checker {
+          background: repeating-conic-gradient(#d4cdc3 0% 25%, #e8e0d4 0% 50%)
+            50% / 14px 14px;
+        }
+        .safe-x {
+          padding-left: max(1rem, env(safe-area-inset-left));
+          padding-right: max(1rem, env(safe-area-inset-right));
+        }
+        .safe-top {
+          padding-top: max(1rem, env(safe-area-inset-top));
+        }
+        .safe-bottom {
+          padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+        }
+        .safe-bottom-bar {
+          padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+        }
+        body.editor-open {
+          padding-bottom: calc(5.5rem + env(safe-area-inset-bottom));
+        }
+        @media (min-width: 1024px) {
+          body.editor-open {
+            padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+          }
+        }
+        input[type="range"] {
+          @apply w-full cursor-pointer touch-pan-y appearance-none bg-transparent;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+          @apply h-1.5 rounded-full bg-ink-200;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+          @apply -mt-1 h-4 w-4 appearance-none rounded-full bg-stamp shadow-md ring-2 ring-ink-50;
+        }
+        input[type="range"]::-moz-range-track {
+          @apply h-1.5 rounded-full bg-ink-200;
+        }
+        input[type="range"]::-moz-range-thumb {
+          @apply h-4 w-4 rounded-full border-0 bg-stamp shadow-md;
+        }
+        @media (pointer: coarse) {
+          input[type="range"]::-webkit-slider-thumb {
+            @apply h-5 w-5 -mt-1.5;
+          }
+          input[type="range"]::-moz-range-thumb {
+            @apply h-5 w-5;
+          }
+        }
+        .btn-download {
+          @apply relative overflow-hidden border border-white/10 bg-gradient-to-br from-stamp via-stamp to-stamp-dim text-white shadow-[0_4px_22px_rgba(232,93,76,0.42),inset_0_1px_0_rgba(255,255,255,0.22)] transition-all duration-200;
+        }
+        .btn-download::before {
+          content: "";
+          @apply pointer-events-none absolute inset-0 bg-gradient-to-t from-black/15 to-transparent;
+        }
+        .btn-download::after {
+          content: "";
+          @apply pointer-events-none absolute -inset-full bg-gradient-to-r from-transparent via-white/20 to-transparent transition-transform duration-700;
+          transform: translateX(-100%) skewX(-12deg);
+        }
+        .btn-download:hover:not(:disabled) {
+          @apply brightness-110 shadow-[0_8px_30px_rgba(232,93,76,0.55)];
+        }
+        .btn-download:hover:not(:disabled)::after {
+          transform: translateX(100%) skewX(-12deg);
+        }
+        .btn-download:active:not(:disabled) {
+          @apply scale-[0.98] brightness-95;
+        }
+        .btn-download:disabled {
+          @apply opacity-60 shadow-none;
+        }
+        .pattern-preview {
+          @apply mb-1 block h-8 w-full rounded-md ring-1 ring-inset ring-white/10;
+        }
+        .pattern-preview-solid {
+          background: #f5f0e6;
+        }
+        .pattern-preview-dots {
+          background: #f5f0e6
+            radial-gradient(circle, #d4c9b8 1.5px, transparent 1.5px);
+          background-size: 8px 8px;
+        }
+        .pattern-preview-stripes {
+          background: repeating-linear-gradient(
+            45deg,
+            #f5f0e6,
+            #f5f0e6 4px,
+            #e0d5c4 4px,
+            #e0d5c4 8px
+          );
+        }
+        .pattern-preview-grid {
+          background-color: #f5f0e6;
+          background-image:
+            linear-gradient(#d4c9b8 1px, transparent 1px),
+            linear-gradient(90deg, #d4c9b8 1px, transparent 1px);
+          background-size: 8px 8px;
+        }
+        .pattern-preview-crosshatch {
+          background:
+            repeating-linear-gradient(
+              45deg,
+              transparent,
+              transparent 5px,
+              #d4c9b8 5px,
+              #d4c9b8 6px
+            ),
+            repeating-linear-gradient(
+              -45deg,
+              transparent,
+              transparent 5px,
+              #d4c9b8 5px,
+              #d4c9b8 6px
+            );
+          background-color: #f5f0e6;
+        }
+        .pattern-preview-waves {
+          background: #f5f0e6;
+          background-image: repeating-radial-gradient(
+            ellipse at center,
+            transparent 0,
+            transparent 6px,
+            #ddd2c0 6px,
+            #ddd2c0 7px
+          );
+          background-size: 16px 12px;
+        }
+        .pattern-preview-diamond {
+          background: #f5f0e6;
+          background-image:
+            linear-gradient(45deg, #e0d5c4 25%, transparent 25%),
+            linear-gradient(-45deg, #e0d5c4 25%, transparent 25%),
+            linear-gradient(45deg, transparent 75%, #e0d5c4 75%),
+            linear-gradient(-45deg, transparent 75%, #e0d5c4 75%);
+          background-size: 10px 10px;
+          background-position:
+            0 0,
+            0 5px,
+            5px -5px,
+            -5px 0;
+        }
+        .pattern-preview-gradient {
+          background: linear-gradient(135deg, #fff8ee, #f5e6d0, #fff8ee);
+        }
+        .pattern-preview-linen {
+          background-color: #f5f0e6;
+          background-image:
+            repeating-linear-gradient(
+              0deg,
+              transparent,
+              transparent 3px,
+              #e8dfd0 3px,
+              #e8dfd0 4px
+            ),
+            repeating-linear-gradient(
+              90deg,
+              transparent,
+              transparent 3px,
+              #e8dfd0 3px,
+              #e8dfd0 4px
+            );
+        }
+        .pattern-preview-circles {
+          background: #f5f0e6
+            radial-gradient(
+              circle,
+              transparent 40%,
+              #d4c9b8 41%,
+              #d4c9b8 42%,
+              transparent 43%
+            );
+          background-size: 14px 14px;
+        }
+        .protected-media {
+          -webkit-user-drag: none;
+          user-select: none;
+          -webkit-touch-callout: none;
+        }
+        .protected-shield {
+          cursor: default;
+        }
+        .stamp-showcase img {
+          display: block;
+          width: 100%;
+          height: auto;
+          filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.45));
+        }
+        .watermark-overlay {
+          pointer-events: none;
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          opacity: 0.22;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='360' height='260' viewBox='0 0 360 260'%3E%3Ctext x='180' y='130' fill='%23ffffff' font-family='Arial,sans-serif' font-size='13' font-weight='700' text-anchor='middle' dominant-baseline='middle' transform='rotate(-28 180 130)'%3EPhotostamp%3C/text%3E%3C/svg%3E");
+          background-repeat: repeat;
+        }
+        #cropContainer {
+          height: min(52vh, 460px);
+          width: 100%;
+          background: #1c1a17;
+        }
+        #cropContainer .cropper-view-box,
+        #cropContainer .cropper-face {
+          border-radius: 2px;
+        }
+        #cropContainer .cropper-line {
+          background-color: #e85d4c;
+        }
+        #cropContainer .cropper-point {
+          background-color: #e85d4c;
+          width: 10px;
+          height: 10px;
+          opacity: 1;
+        }
+        #cropContainer .cropper-dashed {
+          border-color: rgba(245, 240, 232, 0.35);
+        }
+        #cropContainer .cropper-modal {
+          background: rgba(20, 18, 16, 0.65);
+        }
+        #cropContainer .cropper-view-box {
+          outline: 2px solid #e85d4c;
+        }
+        .tool-tab {
+          @apply flex flex-col items-center justify-center gap-1 rounded-xl px-2 py-2.5 text-[11px] font-semibold transition-all duration-200;
+        }
+        #textDragLayer {
+          /* border: 1px dashed rgba(232, 93, 76, 0.35); */
+          /* border-radius: 2px; */
+          touch-action: none;
+        }
+        #textDragLayer.dragging {
+          cursor: grabbing;
+        }
+        #textDragLayer:not(.hidden) {
+          cursor: grab;
+        }
+        @media (max-width: 1023px) {
+          #editor .tool-panel.hidden {
+            display: none;
+          }
+        }
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-dvh overflow-x-hidden bg-ink font-sans text-paper antialiased bg-dots safe-x safe-top safe-bottom"
+  >
+    <!-- Top bar -->
+    <header
+      class="mx-auto flex max-w-6xl items-center justify-between py-5 lg:py-6"
+    >
+      <div class="flex items-center gap-3">
+        <div
+          class="flex h-10 w-10 items-center justify-center rounded-xl bg-stamp/15 ring-1 ring-stamp/30"
+        >
+          <i class="fa-solid fa-stamp text-lg text-stamp"></i>
+        </div>
+        <div>
+          <h1 class="text-lg font-bold tracking-tight text-paper lg:text-xl">
+            Photostamp
+          </h1>
+          <!-- <p class="hidden text-xs text-paper-muted/70 sm:block">
+            Шуудангийн марк үүсгэгч
+          </p> -->
+        </div>
+      </div>
+      <button
+        type="button"
+        id="headerResetBtn"
+        class="hidden items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-paper-muted transition-colors hover:bg-ink-100 hover:text-paper"
+      >
+        <i class="fa-solid fa-rotate-left text-sm"></i>
+        Шинэ зураг
+      </button>
+    </header>
+
+    <main class="mx-auto max-w-6xl pb-8 lg:pb-12">
+      <!-- Landing -->
+      <section id="landingView" class="animate-fade-up">
+        <div
+          class="stamp-showcase mx-auto mb-8 flex max-w-md items-end justify-center gap-3 px-4 sm:max-w-lg sm:gap-5"
+        >
+          <div
+            class="protected-wrap animate-float2 relative w-[28%] -rotate-6 sm:w-[30%]"
+          >
+            <img
+              src="https://i.ibb.co/4n7GGLD5/stamp-1781800445772.png"
+              alt=""
+              loading="eager"
+              width="200"
+              height="200"
+              class="protected-media pointer-events-none select-none"
+              draggable="false"
+            />
+            <div
+              class="protected-shield absolute inset-0 z-[1]"
+              aria-hidden="true"
+            ></div>
+            <div class="watermark-overlay" aria-hidden="true"></div>
+          </div>
+          <div
+            class="protected-wrap animate-float relative z-10 w-[36%] sm:w-[38%]"
+          >
+            <img
+              src="https://i.ibb.co/dJztRFS7/stamp-1781800476836.png"
+              alt=""
+              loading="eager"
+              width="240"
+              height="240"
+              class="protected-media pointer-events-none select-none"
+              draggable="false"
+            />
+            <div
+              class="protected-shield absolute inset-0 z-[1]"
+              aria-hidden="true"
+            ></div>
+            <div class="watermark-overlay" aria-hidden="true"></div>
+          </div>
+          <div
+            class="protected-wrap animate-float3 relative w-[28%] rotate-6 sm:w-[30%]"
+          >
+            <img
+              src="https://i.ibb.co/YBBJ4By4/stamp-1781800645685.png"
+              alt=""
+              loading="eager"
+              width="200"
+              height="200"
+              class="protected-media pointer-events-none select-none"
+              draggable="false"
+            />
+            <div
+              class="protected-shield absolute inset-0 z-[1]"
+              aria-hidden="true"
+            ></div>
+            <div class="watermark-overlay" aria-hidden="true"></div>
+          </div>
+        </div>
+
+        <div class="mb-8 text-center lg:mb-10">
+          <h2
+            class="mx-auto max-w-[80%] text-2xl font-bold leading-tight tracking-tight text-paper sm:text-3xl lg:text-4xl"
+          >
+            Хуучны <span class="text-stamp">маркны хайчилбараар</span> дурын
+            зурагаа хүрээлүүлээрэй
+          </h2>
+          <p
+            class="mx-auto mt-3 max-w-md text-sm leading-relaxed text-paper-muted/80 sm:text-base"
+          >
+            Зурагаа оруулаад долгионтой ирмэг, цагаан хүрээг тохируулж татаж
+            аваарай.
+          </p>
+        </div>
+
+        <div
+          id="uploadZone"
+          role="button"
+          tabindex="0"
+          aria-label="Зураг сонгох"
+          class="group relative mx-auto max-w-xl cursor-pointer overflow-hidden rounded-2xl border border-dashed border-ink-200 bg-ink-50/60 p-10 text-center transition-all duration-300 hover:border-stamp/50 hover:bg-ink-50 sm:p-14"
+        >
+          <div
+            class="pointer-events-none absolute inset-0 bg-gradient-to-b from-stamp/5 to-transparent opacity-0 transition-opacity group-hover:opacity-100"
+          ></div>
+          <div class="relative">
+            <div
+              class="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-2xl bg-ink-100 ring-1 ring-ink-200 transition-transform group-hover:scale-105"
+            >
+              <i class="fa-solid fa-cloud-arrow-up text-3xl text-stamp"></i>
+            </div>
+            <p class="text-base font-semibold text-paper sm:text-lg">
+              Зураг сонгох
+            </p>
+            <p class="mt-1 hidden text-sm text-paper-muted/70 md:block">
+              Эсвэл
+              <kbd
+                class="rounded bg-ink-100 px-1.5 py-0.5 font-mono text-xs text-paper-muted"
+                >Ctrl+V</kbd
+              >
+              дарж оруулах
+            </p>
+            <p class="mt-3 text-xs text-paper-muted/50">
+              JPG · PNG · WebP · GIF — 15 MB хүртэл
+            </p>
+          </div>
+          <input
+            type="file"
+            id="fileInput"
+            accept="image/jpeg,image/png,image/webp,image/gif"
+            class="hidden"
+          />
+        </div>
+
+        <!-- Заавар -->
+        <section class="mt-14 lg:mt-16" aria-labelledby="guideHeading">
+          <p
+            class="mb-5 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60"
+          >
+            Заавар
+          </p>
+
+          <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 lg:gap-4">
+            <div class="rounded-xl bg-ink-50/60 p-5 ring-1 ring-ink-200">
+              <div
+                class="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-stamp/15 text-sm font-bold text-stamp ring-1 ring-stamp/25"
+              >
+                1
+              </div>
+              <h3 class="text-sm font-semibold text-paper">Зураг оруулах</h3>
+              <p class="mt-1.5 text-xs leading-relaxed text-paper-muted/70">
+                Дээрх талбай дээр дарж файл сонгох эсвэл
+                <kbd
+                  class="rounded bg-ink-100 px-1 py-0.5 font-mono text-[10px] text-paper-muted"
+                  >Ctrl+V</kbd
+                >
+                ашиглан зураг оруулах.
+              </p>
+            </div>
+
+            <div class="rounded-xl bg-ink-50/60 p-5 ring-1 ring-ink-200">
+              <div
+                class="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-stamp/15 text-sm font-bold text-stamp ring-1 ring-stamp/25"
+              >
+                2
+              </div>
+              <h3 class="text-sm font-semibold text-paper">Ирмэг тохируулах</h3>
+              <p class="mt-1.5 text-xs leading-relaxed text-paper-muted/70">
+                Долгионтой ирмэг, цагаан хүрээ, загвар болон дэвсгэрийн хээг
+                тохируулж урьдчилан харах.
+              </p>
+            </div>
+
+            <div class="rounded-xl bg-ink-50/60 p-5 ring-1 ring-ink-200">
+              <div
+                class="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-stamp/15 text-sm font-bold text-stamp ring-1 ring-stamp/25"
+              >
+                3
+              </div>
+              <h3 class="text-sm font-semibold text-paper">Текст нэмэх</h3>
+              <p class="mt-1.5 text-xs leading-relaxed text-paper-muted/70">
+                Хүссэн текст, фонт, өнгө сонгож чирж байрлуулах. Шаардлагагүй
+                бол алгасаж болно.
+              </p>
+            </div>
+
+            <div class="rounded-xl bg-ink-50/60 p-5 ring-1 ring-ink-200">
+              <div
+                class="mb-3 flex h-9 w-9 items-center justify-center rounded-lg bg-stamp/15 text-sm font-bold text-stamp ring-1 ring-stamp/25"
+              >
+                4
+              </div>
+              <h3 class="text-sm font-semibold text-paper">Татаж авах</h3>
+              <p class="mt-1.5 text-xs leading-relaxed text-paper-muted/70">
+                Бэлэн болсон маркаа PNG файл болгон татаж авах.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="mt-14 border-t border-ink-200 py-1 text-center lg:mt-16">
+          <p class="text-xs text-paper-muted/50">Photostamp · 2026 ©</p>
+          <!-- <a
+            href="index.html"
+            class="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-paper-muted/60 transition-colors hover:text-stamp"
+          >
+            <i class="fa-solid fa-arrow-left text-[10px]"></i>
+            Нүүр хуудас руу буцах
+          </a> -->
+        </footer>
+      </section>
+
+      <!-- Editor -->
+      <section id="editor" class="hidden animate-fade-up">
+        <div
+          class="grid gap-3 lg:grid-cols-[1fr_340px] lg:gap-8 xl:grid-cols-[1fr_380px]"
+        >
+          <!-- Preview panel -->
+          <div class="order-1 lg:order-none">
+            <div
+              class="rounded-2xl bg-ink-50 ring-1 ring-ink-200 lg:sticky lg:top-6"
+            >
+              <div
+                class="flex items-center justify-between border-b border-ink-200 px-3 py-2.5 sm:px-5 sm:py-3"
+              >
+                <span
+                  class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60"
+                >
+                  <i class="fa-solid fa-eye text-stamp/70"></i>
+                  <span class="sm:inline">Урьдчилан харах</span>
+                </span>
+                <div class="flex items-center gap-2">
+                  <span
+                    id="sizeInfo"
+                    class="hidden max-w-[42vw] truncate rounded-md bg-ink-100 px-2 py-0.5 font-mono text-[10px] text-paper-muted/70 sm:inline-block sm:max-w-none sm:text-[11px]"
+                  ></span>
+                  <button
+                    type="button"
+                    id="cropBtn"
+                    class="flex items-center gap-1.5 rounded-lg border border-ink-200 bg-ink-100/80 px-2.5 py-1.5 text-xs font-semibold text-paper-muted transition-colors hover:border-stamp/40 hover:text-stamp"
+                    title="Зураг таслах"
+                  >
+                    <i class="fa-solid fa-crop-simple"></i>
+                    <span class="sm:inline">Тайрах</span>
+                  </button>
+                </div>
+              </div>
+              <div
+                class="bg-checker overflow-auto rounded-b-2xl p-3 sm:p-6 lg:p-8 [-webkit-overflow-scrolling:touch]"
+              >
+                <div
+                  id="previewProtect"
+                  class="relative mx-auto w-full max-w-full"
+                >
+                  <canvas
+                    id="previewCanvas"
+                    class="protected-media pointer-events-none mx-auto block max-w-full select-none rounded-sm"
+                  ></canvas>
+                  <div
+                    class="protected-shield absolute inset-0 z-[1]"
+                    aria-hidden="true"
+                  ></div>
+                  <div
+                    id="textDragLayer"
+                    class="absolute z-[3] hidden touch-none select-none"
+                    aria-label="Текст чирж байрлуулах"
+                  >
+                    <div
+                      id="textDragHandle"
+                      class="pointer-events-none absolute -translate-x-1/2 -translate-y-1/2"
+                    >
+                      <!-- <div class="flex h-11 w-11 items-center justify-center rounded-full border-2 border-dashed border-stamp bg-ink/70 shadow-lg ring-2 ring-stamp/20 backdrop-blur-sm">
+                                            <i class="fa-solid fa-up-down-left-right text-sm text-stamp"></i>
+                                        </div> -->
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls sidebar -->
+          <aside
+            id="toolsAside"
+            class="order-2 flex flex-col gap-3 lg:order-none lg:gap-4"
+          >
+            <!-- Mobile tool tabs -->
+            <div
+              id="mobileToolsTabs"
+              class="sticky top-2 z-20 grid grid-cols-3 gap-1 rounded-2xl bg-ink/90 p-1 ring-1 ring-ink-200 backdrop-blur-md lg:hidden"
+            >
+              <button
+                type="button"
+                class="tool-tab border-stamp bg-stamp/10 text-stamp ring-1 ring-stamp/25"
+                data-tool-tab="border"
+                aria-selected="true"
+              >
+                <i class="fa-solid fa-border-all text-sm"></i>
+                <span>Ирмэг</span>
+              </button>
+              <button
+                type="button"
+                class="tool-tab text-paper-muted hover:bg-ink-100/50 hover:text-paper"
+                data-tool-tab="text"
+                aria-selected="false"
+              >
+                <i class="fa-solid fa-font text-sm"></i>
+                <span class="flex items-center gap-1"
+                  >Текст
+                  <span
+                    id="textTabDot"
+                    class="hidden h-1.5 w-1.5 rounded-full bg-stamp"
+                  ></span
+                ></span>
+              </button>
+              <button
+                type="button"
+                class="tool-tab text-paper-muted hover:bg-ink-100/50 hover:text-paper"
+                data-tool-tab="color"
+                aria-selected="false"
+              >
+                <i class="fa-solid fa-palette text-sm"></i>
+                <span>Өнгө</span>
+              </button>
+            </div>
+
+            <!-- Presets -->
+            <!-- <div class="rounded-2xl bg-ink-50 p-4 ring-1 ring-ink-200">
+                        <p class="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60">
+                            <i class="fa-solid fa-wand-magic-sparkles text-stamp/70"></i> Бэлэн загвар
+                        </p>
+                        <div id="presets" class="grid grid-cols-3 gap-2">
+                            <button type="button" class="preset-btn rounded-xl border border-stamp bg-stamp/10 px-2 py-3 text-center transition-all hover:border-stamp/60" data-preset="standard">
+                                <i class="preset-icon fa-solid fa-stamp block text-lg text-stamp"></i>
+                                <span class="preset-label mt-1 block text-[11px] font-semibold text-stamp">Стандарт</span>
+                            </button>
+                            <button type="button" class="preset-btn rounded-xl border border-ink-200 bg-ink-100/50 px-2 py-3 text-center transition-all hover:border-ink-300" data-preset="imageOnly">
+                                <i class="preset-icon fa-solid fa-image block text-lg text-paper-muted"></i>
+                                <span class="preset-label mt-1 block text-[11px] font-semibold text-paper-muted">Зөвхөн зураг</span>
+                            </button>
+                            <button type="button" class="preset-btn rounded-xl border border-ink-200 bg-ink-100/50 px-2 py-3 text-center transition-all hover:border-ink-300" data-preset="print">
+                                <i class="preset-icon fa-solid fa-print block text-lg text-paper-muted"></i>
+                                <span class="preset-label mt-1 block text-[11px] font-semibold text-paper-muted">Хэвлэл</span>
+                            </button>
+                        </div>
+                    </div> -->
+
+            <!-- Sliders -->
+            <div
+              data-tool-panel="border"
+              class="tool-panel rounded-2xl bg-ink-50 p-4 ring-1 ring-ink-200"
+            >
+              <p
+                class="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60"
+              >
+                <i class="fa-solid fa-border-all text-stamp/70"></i> Ирмэг &
+                хүрээ
+              </p>
+              <div class="space-y-5">
+                <div>
+                  <div class="mb-2 flex items-center justify-between">
+                    <label class="text-sm font-medium text-paper-muted"
+                      >Хүрээ</label
+                    >
+                    <span
+                      id="borderVal"
+                      class="rounded-md bg-ink-100 px-2 py-0.5 font-mono text-xs font-semibold text-stamp"
+                      >6%</span
+                    >
+                  </div>
+                  <input
+                    type="range"
+                    id="borderSlider"
+                    min="0"
+                    max="15"
+                    value="6"
+                    step="1"
+                  />
+                </div>
+                <div>
+                  <div class="mb-2 flex items-center justify-between">
+                    <label class="text-sm font-medium text-paper-muted"
+                      >Ирмэгийн нягтрал</label
+                    >
+                    <span
+                      id="densityVal"
+                      class="rounded-md bg-ink-100 px-2 py-0.5 font-mono text-xs font-semibold text-stamp"
+                      >5%</span
+                    >
+                  </div>
+                  <input
+                    type="range"
+                    id="densitySlider"
+                    min="3"
+                    max="12"
+                    value="5"
+                    step="1"
+                  />
+                </div>
+                <div>
+                  <div class="mb-2 flex items-center justify-between">
+                    <label class="text-sm font-medium text-paper-muted"
+                      >Цоолборын хэмжээ</label
+                    >
+                    <span
+                      id="holeVal"
+                      class="rounded-md bg-ink-100 px-2 py-0.5 font-mono text-xs font-semibold text-stamp"
+                      >100%</span
+                    >
+                  </div>
+                  <input
+                    type="range"
+                    id="holeSlider"
+                    min="60"
+                    max="140"
+                    value="100"
+                    step="5"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Text overlay -->
+            <div
+              id="textSection"
+              data-tool-panel="text"
+              class="tool-panel hidden rounded-2xl bg-ink-50 p-4 ring-1 ring-ink-200 lg:block"
+            >
+              <div class="mb-4 flex items-center justify-between gap-2">
+                <p
+                  class="flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60"
+                >
+                  <i class="fa-solid fa-font text-stamp/70"></i> Текст
+                </p>
+                <label class="flex shrink-0 cursor-pointer items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="textEnabled"
+                    class="h-4 w-4 rounded border-ink-300 bg-ink-100 text-stamp focus:ring-stamp/40"
+                  />
+                  <span class="text-xs font-medium text-paper-muted"
+                    >Идэвхжүүлэх</span
+                  >
+                </label>
+              </div>
+              <div
+                id="textControls"
+                class="space-y-4 opacity-40 pointer-events-none"
+              >
+                <input
+                  type="text"
+                  id="textInput"
+                  maxlength="80"
+                  placeholder="Текст бичнэ үү..."
+                  class="w-full rounded-xl border border-ink-200 bg-ink-100/80 px-3 py-2.5 text-sm text-paper placeholder:text-paper-muted/40 focus:border-stamp/50 focus:outline-none focus:ring-2 focus:ring-stamp/20"
+                />
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-paper-muted"
+                    >Фонт</label
+                  >
+                  <select
+                    id="textFont"
+                    class="w-full cursor-pointer rounded-xl border border-ink-200 bg-ink-100/80 px-3 py-2.5 text-sm text-paper focus:border-stamp/50 focus:outline-none focus:ring-2 focus:ring-stamp/20"
+                  >
+                    <option
+                      value="Outfit"
+                      style="font-family: Outfit, sans-serif"
+                    >
+                      Outfit
+                    </option>
+                    <option
+                      value="Just Like Heaven"
+                      style="font-family: &quot;Just Like Heaven&quot;, cursive"
+                    >
+                      Just Like Heaven
+                    </option>
+                    <option
+                      value="Noto Sans Mongolian"
+                      style="
+                        font-family:
+                          &quot;Noto Sans Mongolian&quot;, sans-serif;
+                      "
+                    >
+                      Noto Sans
+                    </option>
+                    <option
+                      value="Roboto"
+                      style="font-family: Roboto, sans-serif"
+                    >
+                      Roboto
+                    </option>
+                    <option
+                      value="Montserrat"
+                      style="font-family: Montserrat, sans-serif"
+                    >
+                      Montserrat
+                    </option>
+                    <option
+                      value="Playfair Display"
+                      style="font-family: &quot;Playfair Display&quot;, serif"
+                    >
+                      Playfair
+                    </option>
+                    <option
+                      value="Merriweather"
+                      style="font-family: Merriweather, serif"
+                    >
+                      Merriweather
+                    </option>
+                    <option
+                      value="Bebas Neue"
+                      style="font-family: &quot;Bebas Neue&quot;, sans-serif"
+                    >
+                      Bebas Neue
+                    </option>
+                    <option
+                      value="Oswald"
+                      style="font-family: Oswald, sans-serif"
+                    >
+                      Oswald
+                    </option>
+                    <option
+                      value="Pacifico"
+                      style="font-family: Pacifico, cursive"
+                    >
+                      Pacifico
+                    </option>
+                    <option
+                      value="Dancing Script"
+                      style="font-family: &quot;Dancing Script&quot;, cursive"
+                    >
+                      Dancing Script
+                    </option>
+                    <option value="Caveat" style="font-family: Caveat, cursive">
+                      Caveat
+                    </option>
+                    <option
+                      value="Lobster"
+                      style="font-family: Lobster, cursive"
+                    >
+                      Lobster
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <div class="mb-2 flex items-center justify-between">
+                    <label class="text-sm font-medium text-paper-muted"
+                      >Хэмжээ</label
+                    >
+                    <span
+                      id="textSizeVal"
+                      class="rounded-md bg-ink-100 px-2 py-0.5 font-mono text-xs font-semibold text-stamp"
+                      >8%</span
+                    >
+                  </div>
+                  <input
+                    type="range"
+                    id="textSizeSlider"
+                    min="3"
+                    max="22"
+                    value="8"
+                    step="1"
+                  />
+                </div>
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-paper-muted"
+                    >Өнгө</label
+                  >
+                  <div class="flex items-center gap-2">
+                    <button
+                      type="button"
+                      class="text-color-swatch h-9 w-9 rounded-full ring-2 ring-stamp ring-offset-2 ring-offset-ink-50"
+                      data-color="#ffffff"
+                      style="background: #fff"
+                      title="Цагаан"
+                    ></button>
+                    <button
+                      type="button"
+                      class="text-color-swatch h-9 w-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-ink-50"
+                      data-color="#141210"
+                      style="background: #141210"
+                      title="Хар"
+                    ></button>
+                    <button
+                      type="button"
+                      class="text-color-swatch h-9 w-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-ink-50"
+                      data-color="#e85d4c"
+                      style="background: #e85d4c"
+                      title="Улаан"
+                    ></button>
+                    <button
+                      type="button"
+                      class="text-color-swatch h-9 w-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-ink-50"
+                      data-color="#fef9c3"
+                      style="background: #fef9c3"
+                      title="Шаргал"
+                    ></button>
+                    <input
+                      type="color"
+                      id="textColorPicker"
+                      value="#ffffff"
+                      title="Өөр өнгө"
+                      class="h-9 w-12 cursor-pointer rounded-lg border border-ink-200 bg-ink-100 p-0.5"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-paper-muted"
+                    >Байрлал</label
+                  >
+                  <p
+                    class="mb-3 flex items-center gap-1.5 text-[11px] text-paper-muted/55"
+                  >
+                    <i class="fa-solid fa-hand-pointer text-stamp/70"></i>
+                    Текст дээр дарж чирж байрлуулна уу
+                  </p>
+                  <div id="textPosBtns" class="mb-3 grid grid-cols-3 gap-2">
+                    <button
+                      type="button"
+                      class="text-pos-btn rounded-lg border border-ink-200 bg-ink-100/50 px-2 py-2 text-xs font-semibold text-paper-muted transition-all hover:border-ink-300"
+                      data-y="14"
+                    >
+                      Дээд
+                    </button>
+                    <button
+                      type="button"
+                      class="text-pos-btn rounded-lg border border-ink-200 bg-ink-100/50 px-2 py-2 text-xs font-semibold text-paper-muted transition-all hover:border-ink-300"
+                      data-y="50"
+                    >
+                      Төв
+                    </button>
+                    <button
+                      type="button"
+                      class="text-pos-btn rounded-lg border border-stamp bg-stamp/10 px-2 py-2 text-xs font-semibold text-stamp transition-all"
+                      data-y="86"
+                    >
+                      Доод
+                    </button>
+                  </div>
+                  <div class="hidden space-y-3">
+                    <div>
+                      <div
+                        class="mb-1 flex justify-between text-xs text-paper-muted/70"
+                      >
+                        <span>Хэвтээ</span>
+                        <span id="textXVal" class="font-mono text-stamp"
+                          >50%</span
+                        >
+                      </div>
+                      <input
+                        type="range"
+                        id="textXSlider"
+                        min="5"
+                        max="95"
+                        value="50"
+                        step="1"
+                      />
+                    </div>
+                    <div>
+                      <div
+                        class="mb-1 flex justify-between text-xs text-paper-muted/70"
+                      >
+                        <span>Босоо</span>
+                        <span id="textYVal" class="font-mono text-stamp"
+                          >86%</span
+                        >
+                      </div>
+                      <input
+                        type="range"
+                        id="textYSlider"
+                        min="5"
+                        max="95"
+                        value="86"
+                        step="1"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="flex flex-wrap gap-4">
+                  <label class="flex cursor-pointer items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="textBold"
+                      class="h-4 w-4 rounded border-ink-300 bg-ink-100 text-stamp focus:ring-stamp/40"
+                    />
+                    <span class="text-sm text-paper-muted">Тод</span>
+                  </label>
+                  <label class="flex cursor-pointer items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="textShadow"
+                      checked
+                      class="h-4 w-4 rounded border-ink-300 bg-ink-100 text-stamp focus:ring-stamp/40"
+                    />
+                    <span class="text-sm text-paper-muted">Сүүдэр</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <!-- Color & export -->
+            <div
+              data-tool-panel="color"
+              class="tool-panel hidden rounded-2xl bg-ink-50 p-4 ring-1 ring-ink-200 lg:block"
+            >
+              <p
+                class="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-paper-muted/60"
+              >
+                <i class="fa-solid fa-palette text-stamp/70"></i> Өнгө & чанар
+              </p>
+              <div class="space-y-4">
+                <div>
+                  <label class="mb-2 block text-sm font-medium text-paper-muted"
+                    >Хүрээний өнгө</label
+                  >
+                  <div class="flex items-center gap-2">
+                    <div id="colorSwatches" class="flex gap-2">
+                      <button
+                        type="button"
+                        class="swatch h-9 w-9 scale-110 rounded-full ring-2 ring-stamp ring-offset-2 ring-offset-ink-50 transition-transform hover:scale-110"
+                        data-color="#ffffff"
+                        style="background: #fff"
+                        title="Цагаан"
+                        aria-label="Цагаан"
+                      ></button>
+                      <button
+                        type="button"
+                        class="swatch h-9 w-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-ink-50 transition-transform hover:scale-110"
+                        data-color="#f5f0e6"
+                        style="background: #f5f0e6"
+                        title="Крем"
+                        aria-label="Крем"
+                      ></button>
+                      <button
+                        type="button"
+                        class="swatch h-9 w-9 rounded-full ring-2 ring-transparent ring-offset-2 ring-offset-ink-50 transition-transform hover:scale-110"
+                        data-color="#fef9c3"
+                        style="background: #fef9c3"
+                        title="Шаргал"
+                        aria-label="Шаргал"
+                      ></button>
+                    </div>
+                    <input
+                      type="color"
+                      id="borderColorPicker"
+                      value="#ffffff"
+                      title="Өөр өнгө"
+                      class="h-9 w-12 cursor-pointer rounded-lg border border-ink-200 bg-ink-100 p-0.5"
+                    />
+                  </div>
+                </div>
+                <div id="patternSection">
+                  <label class="mb-2 block text-sm font-medium text-paper-muted"
+                    >Хүрээний загвар</label
+                  >
+                  <div
+                    id="patternBtns"
+                    class="grid grid-cols-4 gap-1.5 sm:grid-cols-5"
+                  >
+                    <button
+                      type="button"
+                      class="pattern-btn rounded-lg border border-stamp bg-stamp/10 p-1.5 transition-all hover:border-stamp/60"
+                      data-pattern="solid"
+                      title="Цаван"
+                    >
+                      <span
+                        class="pattern-preview pattern-preview-solid"
+                      ></span>
+                      <span
+                        class="pattern-label block text-center text-[9px] font-semibold text-stamp"
+                        >Энгийн</span
+                      >
+                    </button>
+                    <button
+                      type="button"
+                      class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300"
+                      data-pattern="dots"
+                      title="Цэгүүд"
+                    >
+                      <span class="pattern-preview pattern-preview-dots"></span>
+                      <span
+                        class="pattern-label block text-center text-[9px] font-semibold text-paper-muted"
+                        >Цэг</span
+                      >
+                    </button>
+                    <button
+                      type="button"
+                      class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300"
+                      data-pattern="stripes"
+                      title="Судал"
+                    >
+                      <span
+                        class="pattern-preview pattern-preview-stripes"
+                      ></span>
+                      <span
+                        class="pattern-label block text-center text-[9px] font-semibold text-paper-muted"
+                        >Судал</span
+                      >
+                    </button>
+                    <button
+                      type="button"
+                      class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300"
+                      data-pattern="grid"
+                      title="Тор"
+                    >
+                      <span class="pattern-preview pattern-preview-grid"></span>
+                      <span
+                        class="pattern-label block text-center text-[9px] font-semibold text-paper-muted"
+                        >Тор</span
+                      >
+                    </button>
+                    <button
+                      type="button"
+                      class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300"
+                      data-pattern="crosshatch"
+                      title="Холбоос"
+                    >
+                      <span
+                        class="pattern-preview pattern-preview-crosshatch"
+                      ></span>
+                      <span
+                        class="pattern-label block text-center text-[9px] font-semibold text-paper-muted"
+                        >Холбоос</span
+                      >
+                    </button>
+                    <button
+                      type="button"
+                      class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300"
+                      data-pattern="waves"
+                      title="Долгион"
+                    >
+                      <span
+                        class="pattern-preview pattern-preview-waves"
+                      ></span>
+                      <span
+                        class="pattern-label block text-center text-[9px] font-semibold text-paper-muted"
+                        >Долгион</span
+                      >
+                    </button>
+                    <button
+                      type="button"
+                      class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300"
+                      data-pattern="diamond"
+                      title="Алмазан"
+                    >
+                      <span
+                        class="pattern-preview pattern-preview-diamond"
+                      ></span>
+                      <span
+                        class="pattern-label block text-center text-[9px] font-semibold text-paper-muted"
+                        >Алмаз</span
+                      >
+                    </button>
+                    <button
+                      type="button"
+                      class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300"
+                      data-pattern="gradient"
+                      title="Градиент"
+                    >
+                      <span
+                        class="pattern-preview pattern-preview-gradient"
+                      ></span>
+                      <span
+                        class="pattern-label block text-center text-[9px] font-semibold text-paper-muted"
+                        >Градиент</span
+                      >
+                    </button>
+                    <button
+                      type="button"
+                      class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300"
+                      data-pattern="linen"
+                      title="Даавуу"
+                    >
+                      <span
+                        class="pattern-preview pattern-preview-linen"
+                      ></span>
+                      <span
+                        class="pattern-label block text-center text-[9px] font-semibold text-paper-muted"
+                        >Даавуу</span
+                      >
+                    </button>
+                    <button
+                      type="button"
+                      class="pattern-btn rounded-lg border border-ink-200 bg-ink-100/50 p-1.5 transition-all hover:border-ink-300"
+                      data-pattern="circles"
+                      title="Тойрог"
+                    >
+                      <span
+                        class="pattern-preview pattern-preview-circles"
+                      ></span>
+                      <span
+                        class="pattern-label block text-center text-[9px] font-semibold text-paper-muted"
+                        >Тойрог</span
+                      >
+                    </button>
+                  </div>
+                  <p
+                    id="patternHint"
+                    class="mt-2 hidden text-[10px] text-paper-muted/50"
+                  >
+                    Загвар харагдахын тулд цагаан хүрээ нэмнэ үү
+                  </p>
+                </div>
+                <!-- <div>
+                                <label class="mb-2 block text-sm font-medium text-paper-muted">Экспортын чанар</label>
+                                <div id="scaleBtns" class="grid grid-cols-3 gap-2">
+                                    <button type="button" class="scale-btn rounded-xl border border-stamp bg-stamp/10 py-2.5 text-sm font-bold text-stamp transition-all" data-scale="1">1×</button>
+                                    <button type="button" class="scale-btn rounded-xl border border-ink-200 bg-ink-100/50 py-2.5 text-sm font-bold text-paper-muted transition-all hover:border-ink-300" data-scale="2">2×</button>
+                                    <button type="button" class="scale-btn rounded-xl border border-ink-200 bg-ink-100/50 py-2.5 text-sm font-bold text-paper-muted transition-all hover:border-ink-300" data-scale="3">3×</button>
+                                </div>
+                            </div> -->
+              </div>
+            </div>
+
+            <!-- Desktop actions -->
+            <div id="desktopActions" class="hidden flex-col gap-2 lg:flex">
+              <button
+                type="button"
+                id="downloadBtnDesktop"
+                class="btn-download flex w-full items-center justify-center rounded-2xl px-4 py-3.5"
+              >
+                <span class="relative flex items-center gap-3">
+                  <span
+                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/20 shadow-inner ring-1 ring-inset ring-white/25 backdrop-blur-sm"
+                  >
+                    <i class="fa-solid fa-download text-base"></i>
+                  </span>
+                  <span
+                    class="flex flex-col items-start text-left leading-none"
+                  >
+                    <span class="text-[15px] font-bold tracking-wide"
+                      >Татаж авах</span
+                    >
+                    <!-- <span class="mt-1 text-[11px] font-medium text-white/75">PNG · тунгалаг фон</span> -->
+                  </span>
+                </span>
+              </button>
+              <button
+                type="button"
+                id="copyBtnDesktop"
+                class="hidden flex w-full items-center justify-center gap-2 rounded-xl border border-ink-200 bg-ink-100/50 py-3 text-sm font-semibold text-paper-muted transition-colors hover:border-ink-300 hover:text-paper disabled:opacity-50"
+              >
+                <i class="fa-regular fa-copy"></i>
+                Хуулах
+              </button>
+            </div>
+          </aside>
+        </div>
+      </section>
+    </main>
+
+    <!-- Mobile action bar -->
+    <div
+      id="mobileActions"
+      class="fixed inset-x-0 bottom-0 z-40 hidden border-t border-ink-200 bg-ink/90 px-4 pt-3 backdrop-blur-xl safe-bottom-bar lg:hidden"
+    >
+      <div class="mx-auto flex max-w-lg gap-2">
+        <button
+          type="button"
+          id="copyBtn"
+          class="hidden flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-ink-200 bg-ink-100 text-paper-muted transition-colors hover:text-paper disabled:opacity-50"
+          aria-label="Хуулах"
+        >
+          <i class="fa-regular fa-copy text-lg"></i>
+        </button>
+        <button
+          type="button"
+          id="downloadBtn"
+          class="btn-download flex h-[52px] flex-1 items-center justify-center rounded-2xl px-3"
+        >
+          <span
+            class="relative flex w-full items-center justify-center gap-2.5 sm:gap-3"
+          >
+            <span
+              class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/20 ring-1 ring-inset ring-white/25 backdrop-blur-sm"
+            >
+              <i class="fa-solid fa-download text-sm"></i>
+            </span>
+            <span
+              class="flex min-w-0 flex-col items-start text-left leading-none"
+            >
+              <span class="text-sm font-bold tracking-wide">Татаж авах</span>
+              <!-- <span class="mt-0.5 text-[10px] font-medium text-white/75">PNG файл</span> -->
+            </span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div
+      id="loadingOverlay"
+      class="fixed inset-0 z-50 hidden items-center justify-center bg-ink/80 backdrop-blur-sm"
+    >
+      <div class="flex flex-col items-center gap-3">
+        <i class="fa-solid fa-spinner fa-spin text-3xl text-stamp"></i>
+        <span class="text-sm text-paper-muted">Ачаалж байна...</span>
+      </div>
+    </div>
+
+    <!-- Crop modal -->
+    <div
+      id="cropModal"
+      class="fixed inset-0 z-[60] hidden items-center justify-center bg-ink/90 p-3 backdrop-blur-sm sm:p-4"
+    >
+      <div
+        class="flex max-h-[96dvh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl bg-ink-50 ring-1 ring-ink-200"
+      >
+        <div
+          class="flex items-center justify-between border-b border-ink-200 px-4 py-3 sm:px-5"
+        >
+          <div>
+            <h3 class="text-sm font-bold text-paper sm:text-base">
+              Зураг таслах
+            </h3>
+            <p class="text-xs text-paper-muted/60">
+              Хэмжээгээ тохируулаад хадгална уу
+            </p>
+          </div>
+          <button
+            type="button"
+            id="cropCloseBtn"
+            class="flex h-9 w-9 items-center justify-center rounded-lg text-paper-muted transition-colors hover:bg-ink-100 hover:text-paper"
+            aria-label="Хаах"
+          >
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <div class="min-h-0 flex-1 overflow-hidden p-3 sm:p-4">
+          <div id="cropContainer">
+            <img
+              id="cropImage"
+              src=""
+              alt="Таслах зураг"
+              class="block max-w-full"
+            />
+          </div>
+        </div>
+        <div class="border-t border-ink-200 p-4 sm:px-5">
+          <p
+            class="mb-2 text-xs font-semibold uppercase tracking-wider text-paper-muted/60"
+          >
+            Харьцаа
+          </p>
+          <div id="cropRatioBtns" class="mb-4 flex flex-wrap gap-2">
+            <button
+              type="button"
+              class="crop-ratio-btn rounded-lg border border-stamp bg-stamp/10 px-3 py-1.5 text-xs font-semibold text-stamp"
+              data-ratio="free"
+            >
+              Чөлөөт
+            </button>
+            <button
+              type="button"
+              class="crop-ratio-btn rounded-lg border border-ink-200 bg-ink-100/50 px-3 py-1.5 text-xs font-semibold text-paper-muted"
+              data-ratio="1"
+            >
+              1:1
+            </button>
+            <button
+              type="button"
+              class="crop-ratio-btn rounded-lg border border-ink-200 bg-ink-100/50 px-3 py-1.5 text-xs font-semibold text-paper-muted"
+              data-ratio="0.666667"
+            >
+              2:3
+            </button>
+            <button
+              type="button"
+              class="crop-ratio-btn rounded-lg border border-ink-200 bg-ink-100/50 px-3 py-1.5 text-xs font-semibold text-paper-muted"
+              data-ratio="1.333333"
+            >
+              4:3
+            </button>
+            <button
+              type="button"
+              class="crop-ratio-btn rounded-lg border border-ink-200 bg-ink-100/50 px-3 py-1.5 text-xs font-semibold text-paper-muted"
+              data-ratio="0.75"
+            >
+              3:4
+            </button>
+            <button
+              type="button"
+              class="crop-ratio-btn rounded-lg border border-ink-200 bg-ink-100/50 px-3 py-1.5 text-xs font-semibold text-paper-muted"
+              data-ratio="1.777778"
+            >
+              16:9
+            </button>
+            <button
+              type="button"
+              class="crop-ratio-btn rounded-lg border border-ink-200 bg-ink-100/50 px-3 py-1.5 text-xs font-semibold text-paper-muted"
+              data-ratio="0.5625"
+            >
+              9:16
+            </button>
+          </div>
+          <div class="flex gap-2">
+            <button
+              type="button"
+              id="cropCancelBtn"
+              class="flex-1 rounded-xl border border-ink-200 bg-ink-100/50 py-3 text-sm font-semibold text-paper-muted transition-colors hover:border-ink-300 hover:text-paper"
+            >
+              Болих
+            </button>
+            <button
+              type="button"
+              id="cropApplyBtn"
+              class="flex-1 rounded-xl bg-stamp py-3 text-sm font-bold text-white shadow-lg shadow-stamp/25 transition-all hover:bg-stamp-dim"
+            >
+              <i class="fa-solid fa-check mr-1"></i> Хадгалах
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="toast"
+      role="status"
+      class="pointer-events-none fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-1/2 z-[100] max-w-[calc(100vw-2rem)] -translate-x-1/2 translate-y-8 rounded-xl bg-ink-100 px-5 py-3 text-center text-sm font-medium text-paper opacity-0 shadow-xl ring-1 ring-ink-200 transition-all duration-300"
+    ></div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="/payment-config.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
