@@ -185,16 +185,34 @@ let borderColor = "#ffffff";
 let bgPattern = "solid";
 let textColor = "#ffffff";
 const patternTileCache = new Map();
+let lastPreviewLimitsKey = "";
 
 function getPreviewLimits() {
   const container = $("previewProtect")?.parentElement;
   const containerW = container?.clientWidth || window.innerWidth;
   const w = window.innerWidth;
   let maxH;
-  if (w >= 1024) maxH = Math.min(520, window.innerHeight * 0.7);
-  else if (w >= 768) maxH = Math.min(480, window.innerHeight * 0.55);
-  else maxH = Math.min(360, window.innerHeight * 0.45);
+  if (w >= 1024) {
+    maxH = Math.min(520, window.innerHeight * 0.7);
+  } else if (w >= 768) {
+    // Fixed height — avoid innerHeight changes when mobile browser chrome hides/shows on scroll.
+    maxH = 480;
+  } else {
+    maxH = 360;
+  }
   return { maxW: Math.max(100, containerW), maxH };
+}
+
+function previewLimitsChanged() {
+  const { maxW, maxH } = getPreviewLimits();
+  const key = `${maxW}|${maxH}`;
+  if (key === lastPreviewLimitsKey) return false;
+  lastPreviewLimitsKey = key;
+  return true;
+}
+
+function schedulePreviewOnLayoutChange() {
+  if (previewLimitsChanged()) schedulePreview();
 }
 
 function applyCanvasDisplaySize(canvas, outW, outH, limits) {
@@ -974,6 +992,8 @@ function updatePreview() {
     updateLabels();
     syncPresetHighlight();
     updateTextDragUI();
+    const limits = getPreviewLimits();
+    lastPreviewLimitsKey = `${limits.maxW}|${limits.maxH}`;
   };
   const t = opts.textOverlay;
   if (t?.enabled && t.content?.trim()) {
@@ -1728,7 +1748,7 @@ window.addEventListener(
   "resize",
   () => {
     syncMobileToolPanels();
-    if (sourceImage) schedulePreview();
+    if (sourceImage) schedulePreviewOnLayoutChange();
   },
   { passive: true },
 );
@@ -1737,7 +1757,7 @@ if (typeof ResizeObserver !== "undefined") {
   const previewWrap = $("previewProtect")?.parentElement;
   if (previewWrap) {
     new ResizeObserver(() => {
-      if (sourceImage) schedulePreview();
+      if (sourceImage) schedulePreviewOnLayoutChange();
     }).observe(previewWrap);
   }
 }
@@ -1779,7 +1799,7 @@ window.addEventListener(
     resizeTimer = setTimeout(() => {
       if (sourceImage && !editor.classList.contains("hidden")) {
         setEditorOpen(true);
-        schedulePreview();
+        schedulePreviewOnLayoutChange();
       }
     }, 150);
   },
