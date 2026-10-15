@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="mn">
+    <head>
+        <meta charset="utf-8" />
+        <title>Шинэ таб</title>
+        <link rel="stylesheet" href="newtab.css" />
+    </head>
+    <body>
+        <main>
+            <div class="brand">
+                <div class="logo">▶</div>
+                <h1>{{TITLE}}</h1>
+            </div>
+
+            <form id="search" autocomplete="off">
+                <div class="engines" role="tablist">
+                    <button type="button" class="engine active" data-engine="youtube">YouTube</button>
+                    <button type="button" class="engine" data-engine="google">Google</button>
+                </div>
+                <div class="field">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
+                    <input id="q" name="q" placeholder="YouTube-ээс хайх эсвэл URL оруулах" autofocus />
+                </div>
+            </form>
+
+            <nav class="tiles">
+                <a href="https://www.youtube.com"><span style="background: #ff0033">▶</span>YouTube</a>
+                <a href="https://www.netflix.com"><span style="background: #e50914">N</span>Netflix</a>
+                <a href="https://www.twitch.tv"><span style="background: #9146ff">T</span>Twitch</a>
+                <a href="https://vimeo.com"><span style="background: #17d5ff">V</span>Vimeo</a>
+                <a href="https://open.spotify.com"><span style="background: #1db954">S</span>Spotify</a>
+                <a href="https://www.google.com"><span style="background: #4285f4">G</span>Google</a>
+            </nav>
+        </main>
+        <script src="newtab.js"></script>
+    </body>
+</html>
